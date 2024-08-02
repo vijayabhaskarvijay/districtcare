@@ -1,0 +1,62 @@
+// Pagination configuration
+    $studentsPerPage = 15;
+    $page = isset($_GET['page']) ? $_GET['page'] : 1;
+    $offset = ($page - 1) * $studentsPerPage;
+
+    // Filter variables
+    $department = isset($_GET['department']) ? $_GET['department'] : '';
+    $search = isset($_GET['search']) ? $_GET['search'] : '';
+
+    // Generate the WHERE condition based on filter values
+    $whereCondition = '';
+    if (!empty($department)) {
+        $whereCondition .= " WHERE department = '$department'";
+    }
+    if (!empty($search)) {
+        if (empty($whereCondition)) {
+            $whereCondition .= " WHERE name LIKE '%$search%'";
+        } else {
+            $whereCondition .= " AND name LIKE '%$search%'";
+        }
+    }
+
+    // Retrieve students based on filter and pagination
+    $sql = "SELECT * FROM student_details" . $whereCondition . " LIMIT $offset, $studentsPerPage";
+    $result = $conn->query($sql);
+
+    // Count total students for pagination
+    $sqlCount = "SELECT COUNT(*) AS total FROM student_details" . $whereCondition;
+    $countResult = $conn->query($sqlCount);
+    $rowCount = $countResult->fetch_assoc()['total'];
+    $totalPages = ceil($rowCount / $studentsPerPage);
+    ?>
+
+
+============================================================================
+<div class="pagination">
+            <?php
+            $numLinks = min($totalPages, 10); // Display maximum of 10 links
+            $startPage = max($page - floor($numLinks / 2), 1);
+            $endPage = $startPage + $numLinks - 1;
+
+            if ($endPage > $totalPages) {
+                $startPage = max($totalPages - $numLinks + 1, 1);
+                $endPage = $totalPages;
+            }
+
+            if ($page > 1) {
+                echo '<a href="?page=' . ($page - 1) . '&department=' . $department . '&search=' . $search . '">Previous</a>';
+            }
+
+            for ($i = $startPage; $i <= $endPage; $i++) {
+                echo '<a href="?page=' . $i . '&department=' . $department . '&search=' . $search . '"';
+                if ($i == $page) {
+                    echo ' class="active"';
+                }
+                echo '>' . $i . '</a>';
+            }
+
+            if ($page < $totalPages) {
+                echo '<a href="?page=' . ($page + 1) . '&department=' . $department . '&search=' . $search . '">Next</a>';
+            }
+            ?>

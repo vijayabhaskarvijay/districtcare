@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Government Login</title>
+    <link rel="icon" href="../images/urbanlink-logo.png" type="image/icon type">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-size: cover;
+            background-repeat: no-repeat;
+            background-color: #435f75;
+            height: 87vh;
+            overflow: hidden;
+        }
+
+        body::-webkit-scrollbar {
+            display: none;
+        }
+
+
+        .container {
+            position: absolute;
+            background-color: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(10px);
+            left: 50%;
+            top: 35%;
+            display: grid;
+            grid-template-columns: repeat(2, 50%);
+            transform: translate(-50%, -50%);
+            width: 90%;
+            max-width: 900px;
+            margin: 100px auto;
+            padding: 20px;
+            border-radius: 20px;
+            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+            height: 550px;
+
+        }
+
+        img {
+            float: right;
+        }
+
+        h2 {
+            text-align: center;
+            color: #333333;
+            margin-bottom: 20px;
+            position: relative;
+            /* top: -10px; */
+            left: 220px;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        label {
+            font-weight: normal;
+            display: block;
+            margin-bottom: 2px;
+            margin-top: 10px;
+        }
+
+        input[type="text"],
+        input[type="email"],
+        input[type="password"],
+        select {
+
+            width: 80%;
+            padding: 10px;
+            border-radius: 3px;
+            border: 1px solid #cccccc;
+        }
+
+        input[type="submit"] {
+            width: 80%;
+            padding: 10px;
+            background-color: lightseagreen;
+            color: #ffffff;
+            border: none;
+            cursor: pointer;
+            border-radius: 3px;
+            margin-top: 30px;
+        }
+
+        input[type="submit"]:hover {
+            background-color: green;
+            color: #ffffff;
+            transition: 0.2s ease-in;
+        }
+
+        .loginpic {
+            position: relative;
+            height: 300px;
+            width: 300px;
+            left: 480px;
+            top: -300px;
+            border-radius: 10px;
+        }
+
+        .posi {
+            position: relative;
+            left: -370px;
+            top: 50px;
+        }
+
+        .error {
+            color: #FF0000;
+            margin-bottom: 10px;
+        }
+
+        .success {
+            color: #008000;
+            margin-bottom: 10px;
+        }
+
+
+        @media (max-width: 700px) {
+            .container {
+                margin: 50px auto;
+                width: 520px;
+                height: 900px;
+                position: relative;
+                top: 550px;
+                left: 260px;
+            }
+
+            .loginpic {
+                position: relative;
+                top: -430px;
+                left: 70px;
+                height: 250px;
+                width: 320px;
+            }
+
+            .posi {
+                position: relative;
+                left: -190px;
+                top: 380px;
+                width: 480px;
+            }
+
+            h2 {
+                position: relative;
+                left: 110px;
+            }
+
+            .error {
+                display: none;
+            }
+
+            .success {
+                display: none;
+            }
+
+
+        }
+    </style>
+</head>
+
+<body>
+    <?php
+    session_start(); // Start the session
+
+    $host = "localhost";
+    $username = "root";
+    $password = "";
+    $database = "urbanlink";
+
+    $conn = mysqli_connect($host, $username, $password, $database);
+
+    if (isset($_POST['username']) && isset($_POST['email']) && isset($_POST['password']) && isset($_POST['department']) && isset($_POST['place'])) {
+        $username = $_POST['username'];
+        $email = $_POST['email'];
+        $password = $_POST['password'];
+        $department = $_POST['department'];
+        $place = $_POST['place'];
+
+        $query = "SELECT * FROM govn_staff_details WHERE govn_staff_name = '$username' AND govn_staff_email = '$email' AND govn_staff_password = '$password' AND govn_staff_work_dept = '$department' AND govn_staff_location = '$place'";
+
+        $result = mysqli_query($conn, $query);
+
+        if (mysqli_num_rows($result) == 1) {
+            // Successful verification
+            $row = mysqli_fetch_assoc($result);
+
+            $_SESSION['govn_staff_name'] = $row['govn_staff_name'];
+            $_SESSION['govn_staff_email'] = $row['govn_staff_email'];
+            $_SESSION['govn_staff_loc'] = $row['govn_staff_location'];
+            $_SESSION['govn_staff_id'] = $row['govn_staff_id'];
+            $_SESSION['govn_staff_dept'] = $row['govn_staff_work_dept']; // Save department in session
+
+            header("Location: govn_landing.php");
+            exit();
+        } else {
+            // Error message
+            $error = "Invalid credentials. Please try again.";
+        }
+    }
+    ?>
+    <div class="container">
+        <h2>Government Login</h2>
+        <form method="POST" action="<?php echo $_SERVER['PHP_SELF']; ?>">
+            <div class="posi">
+                <label for="username">Username:</label>
+                <input type="text" id="username" name="username" placeholder="Enter your username" required>
+            </div>
+            <div class="posi">
+                <label for="email">Email:</label>
+                <input type="email" id="email" name="email" placeholder="Enter your user-email" required>
+            </div>
+            <div class="posi">
+                <label for="password">Password:</label>
+                <input type="password" id="password" name="password" placeholder="Enter your password" required>
+            </div>
+            <div class="posi">
+                <label for="department">Department:</label>
+                <select id="department" name="department" required>
+                    <option class=".select-options" value="">Select Department</option>
+                    <option class=".select-options" value="Revenue Department">Revenue Department</option>
+                    <option class=".select-options" value="Public Works Department (PWD)">Public Works Department (PWD)</option>
+                    <option class=".select-options" value="Municipal Corporation">Municipal Corporation</option>
+                    <option class=".select-options" value="Health Department">Health Department</option>
+                    <option class=".select-options" value="Education Department">Education Department</option>
+                    <option class=".select-options" value="Agriculture Department">Agriculture Department</option>
+                    <option class=".select-options" value="Police Department">Police Department</option>
+                    <option class=".select-options" value="Fire and Rescue Services Department">Fire and Rescue Services Department</option>
+                    <option class=".select-options" value="Social Welfare Department">Social Welfare Department</option>
+                    <option class=".select-options" value="Rural Development Department">Rural Development Department</option>
+                    <option class=".select-options" value="Forest Department">Forest Department</option>
+                    <option class=".select-options" value="Animal Husbandry Department">Animal Husbandry Department</option>
+                    <option class=".select-options" value="Town Planning Department">Town Planning Department</option>
+                    <option class=".select-options" value="Electricity Department">Electricity Department</option>
+                    <option class=".select-options" value="Water Supply and Sanitation Department">Water Supply and Sanitation Department</option>
+                    <option class=".select-options" value="Tax Department (Income Tax, Sales Tax, etc.)">Tax Department (Income Tax, Sales Tax, etc.)</option>
+                    <option class=".select-options" value="Public Distribution System (PDS) Department">Public Distribution System (PDS) Department</option>
+                    <option class=".select-options" value="Information and Public Relations Department">Information and Public Relations Department</option>
+                </select>
+            </div>
+            <div class="posi">
+                <label for="place">Place:</label>
+                <select id="place" name="place" required>
+                    <option class=".select-options" value="">Select Place</option>
+                    <option class=".select-options" value="Gobichettipalayam">Gobichettipalayam</option>
+                    <option class=".select-options" value="Sathyamangalam">Sathyamangalam</option>
+                </select>
+            </div>
+            <div class="posi">
+                <input type="submit" value="Login">
+            </div>
+        </form>
+        <img class="loginpic" src="../images/Login-Register.png">
+    </div>
+</body>
+
+</html>

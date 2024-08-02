@@ -1,0 +1,78 @@
+*WORKS* 
+	1.RESPONSIVENESS IN ALL PAGES
+	2.STOP DUPLICATION OF REPORTS IN PUBLIC SIDE
+	5.SENT EMAIL TO PUBLIC BASED ON WORK STATUS 
+M53 5G
+POCO X5 PRO
+SAMSUNG F54
+IQOO Z7S
+
+
+
+NEXT WORK:
+see in my urbanlink project, there is an the public users can report the problem and the they can provide feedback for the problem
+they reported after the problem is resolved,now in my project there are two verticals that is government can resolve the public area 
+reporting problem and the non-governmental organizations[social service doing volunteering team ] can solve the problem if they are able to, 
+for now the feedback system will be recieved on the consideration of that the problem is solved by the government and so along with details of the problems
+will be displayed on the feedback page and feedback description and star rating is collected fom the user and will be saved in the feedback_details
+table in database , my project guide yesterday insisted an new work of implementing the ngo fund requesting feature to government, the full idea is that the 
+ngo can raise fund for the upcoming work they are going to get involved, they can request and amount to the respective government department of which the problem is related
+ to [an ngo_fund_request.php page should be created] and the government will have an page[govn_fund_request.php page should be created] where the ngo's fund request will be displayed 
+ and the ngo request will be displayed in an way of ngo having high rating order will be displayed first lower rating ngo request will be displayed lower, in govn_fund_request page 
+ the ngo details + star rating+ amount requested + upcoming work details should be displayed along with approve or reject dropdown along with an description box separately where the government can enter the message
+  that they are willing to say will be there, now the main need is that there is only one feedback page where the details will be saved in the database table and will be seen by the government, but i need another page where the feedback should be collected for the work done by the ngo along with the star rating which should be updated for the particular ngo for various problems,each time the star rating given should be updating for the star rating for the ngo , need not be separately saved in a new row in database, it should update the overall star rating for the quality of that particular ngo so that based on the rating point they will be prioritized in the government fund seeing page, 
+but i dont know how to manage the overall star rating for the ngo,can you understand my need and the idea that we are going to work here after, if yes then explain and just give me any idea of how to cerate table in database how to set overall star rating for the particular ngo, dont give any codes
+
+DEPARTMENT:
+Revenue Department
+Public Works Department (PWD)
+Municipal Corporation Department
+Health Department
+Education Department
+Agriculture Department
+Police Department
+Fire and Rescue Services Department
+Social Welfare Department
+Rural Development Department
+Transport Department
+Tourism Department
+Forest Department
+Animal Husbandry Department
+Town Planning Department
+Electricity Department
+Water Supply and Sanitation Department
+Tax Department (Income Tax, Sales Tax, etc.)
+
+
+database design:-
+DISTRICT CARE
+	1.GOBICHETTIPALAYAM_USERS (done) 
+		gobi_user_id,gobi_user_name,gobi_user_phone_number,gobi_user_email,gobi_user_password,gobi_user_dob,gobi_user_address,gobi_user_place,gobi_user_main_area
+
+	2.SATHYAMANGALAM_USERS	(done)				 			   																				
+		sathy_user_id,sathy_user_name,sathy_user_phone_number,sathy_user_email,sathy_user_password,sathy_user_dob,sathy_user_address,sathy_user_place,sathy_user_main_area
+		
+	3.ADMIN_DETAILS (done)
+		admin_name,admin_email,admin_pass,admin_phone_number
+	
+	4.GOVN_STAFF (done)
+		govt_staff_name,govt_staff_email,govt_staff_password,govt_staff_work_dept,govt_staff_phone,govt_staff_location
+	
+	5.gobi_helpline (done)
+	    	department,staff_name,dept_helpline_phone,address,timings
+	
+	6.sathy_helpline (done) 
+		department,staff_name,dept_helpline_phone,address,timings
+	
+	7.gobi_problems:- (done)
+		gobiuser_prob_name,gobiuser_prob_phone,gobiuser_prob_address,gobiuser_prob_mainarea,gobiuser_prob_problemtype,gobiuser_prob_problocation,gobiuser_prob_probdescp,gobiuser_prob_probdate
+	
+	8.sathy_problems:- (done)
+		name,phone_number,address,main_area,problem_type,prob_location,prob_description,prob_date
+
+	9.public_posts:(done)
+		pp_username,pp_userphone,pp_userpost_description,pp_userloc,pp_userarea,pp_date
+    10.public_users:
+        public_user_name,public_user_phone,public_user_email,public_user_password,public_user_address,public_user_main_area	
+
+	

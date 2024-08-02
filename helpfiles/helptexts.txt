@@ -1,0 +1,9 @@
+create a page that completely manages users data,
+the data should be fetched from the gobi_users table with the columns of `gobi_user_id`, `gobi_user_name`, `gobi_user_dob`, `gobi_user_age`, `gobi_user_phone_number`, `gobi_user_place`, `gobi_user_email`, `gobi_user_password`, `gobi_user_address`, `gobi_user_main_area`, `gobi_user_acc_status`, `gobi_user_mpin`and
+from sathy_users table with the columns of `sathy_user_id`, `sathy_user_name`, `sathy_user_dob`, `sathy_user_age`, `sathy_user_phone_number`, `sathy_user_place`, `sathy_user_email`, `sathy_user_password`, `sathy_user_address`, `sathy_user_main_area`, `sathy_user_acc_status`, `sathy_user_mpin`
+in the page the data should be displayed in an suitable way either table or some another modern new way,with the provisions to completely manage users in an neat way , like data updation or user profile deletion , changing of data storage from gobi_users to sathy_users and vice versa, give necessary code for this page with suitable name along with using bootstrap
+follow below instructions correctly
+1.Gobi user table and Sathy user table should be separately displayed inside two separate container that should be styled with modern design with responsive bootstrap codes.
+2.Each row of table should have actions buttons "Update","Delete".
+3.When Delete button is clicked within the same page using simple php and sql and js , after asking an confirmation message from the user, if they click yes then simply the data should deleted from particular table respectively
+4.when update is click that particular rows user id and table name [if update is clicked in Gobi_users table then table name should be shared as gobi_users and vice versa] should be passed to admin_user_update_sep.php

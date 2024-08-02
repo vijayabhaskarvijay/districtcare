@@ -1,0 +1,319 @@
+Loading configuration....
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Manage User Profile</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+    <style>
+        body {
+            background-image: url("../images/15694619_5595285.jpg");
+            background-size: cover;
+            background-position: center;
+            font-family: Arial, sans-serif;
+        }
+
+        .container {
+            width: 1000px;
+            height: 580px;
+            margin: 50px auto;
+            padding: 20px;
+            background-color: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(10px);
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .section-left {
+            width: 350px;
+            position: relative;
+            top: 30px;
+            left: 50px;
+            float: left;
+        }
+
+        .section-right {
+            width: 350px;
+            position: relative;
+            top: 30px;
+            left: -120px;
+            float: right;
+        }
+
+        h2 {
+            text-align: center;
+            color: #333;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        label {
+            font-weight: bold;
+            display: block;
+            margin-bottom: 5px;
+        }
+
+        input[type="text"],
+        input[type="date"],
+        input[type="password"],
+        select {
+            width: 100%;
+            padding: 10px;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+        }
+
+        .password-input {
+            position: relative;
+        }
+
+        .toggle-password {
+            position: absolute;
+            top: 50%;
+            right: 10px;
+            transform: translateY(-50%);
+            color: #aaa;
+            cursor: pointer;
+        }
+
+        .email {
+            padding: 11px;
+            width: 350px;
+            border: 1px solid #BFC9CA;
+            border-radius: 5px;
+        }
+
+        .toggle-password:hover {
+            color: #555;
+        }
+
+        input[type="submit"] {
+            width: 100%;
+            background-color: #4caf50;
+            color: #fff;
+            padding: 10px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .success {
+            background-color: #d4edda;
+            color: #155724;
+            padding: 10px;
+            margin-bottom: 10px;
+            border-radius: 5px;
+        }
+
+        .error {
+            background-color: #f8d7da;
+            color: #721c24;
+            padding: 10px;
+            margin-bottom: 10px;
+            border-radius: 5px;
+        }
+
+        @media (max-width: 600px) {
+            .container {
+                width: 300px;
+                height: auto;
+                margin: 20px;
+                padding: 10px;
+            }
+
+            .section-left,
+            .section-right {
+                width: 100%;
+                position: static;
+                float: none;
+            }
+
+            .section-right {
+                margin-top: 20px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <?php
+    session_start();
+    $servername = "localhost";
+    $dbUsername = "root";
+    $dbPassword = "";
+    $dbname = "urbanlink";
+    $table = "";
+    $userColumn = "";
+    $dobColumn = "";
+    $ageColumn = "";
+    $phoneColumn = "";
+    $placeColumn = "";
+    $emailColumn = "";
+    $passwordColumn = "";
+    $addressColumn = "";
+    $mainAreaColumn = "";
+
+    // Check if user is logged in
+    if (!isset($_SESSION['username'])) {
+        header("Location: login.php");
+        exit();
+    }
+
+    // Determine the user's table based on their location
+    $location = strtolower($_SESSION['location']);
+    if ($location === 'gobichettipalayam' || $location === 'gobi') {
+        $table = "gobi_users";
+        $userColumn = "gobi_user_name";
+        $dobColumn = "gobi_user_dob";
+        $ageColumn = "gobi_user_age";
+        $phoneColumn = "gobi_user_phone_number";
+        $placeColumn = "gobi_user_place";
+        $emailColumn = "gobi_user_email";
+        $passwordColumn = "gobi_user_password";
+        $addressColumn = "gobi_user_address";
+        $mainAreaColumn = "gobi_user_main_area";
+    } elseif ($location === 'sathyamangalam' || $location === 'sathy') {
+        $table = "sathy_users";
+        $userColumn = "sathy_user_name";
+        $dobColumn = "sathy_user_dob";
+        $ageColumn = "sathy_user_age";
+        $phoneColumn = "sathy_user_phone_number";
+        $placeColumn = "sathy_user_place";
+        $emailColumn = "sathy_user_email";
+        $passwordColumn = "sathy_user_password";
+        $addressColumn = "sathy_user_address";
+        $mainAreaColumn = "sathy_user_main_area";
+    } else {
+        echo "<div class='error'>Invalid location.</div>";
+        exit();
+    }
+
+    // Connect to the database
+    $conn = new mysqli($servername, $dbUsername, $dbPassword, $dbname);
+
+    // Check the connection
+    if ($conn->connect_error) {
+        die("Connection failed: " . $conn->connect_error);
+    }
+
+    // Retrieve user information from the appropriate table
+    $username = $_SESSION['username'];
+    $sql = "SELECT * FROM $table WHERE $userColumn = ?";
+    $stmt = $conn->prepare($sql);
+    $stmt->bind_param("s", $username);
+    $stmt->execute();
+    $result = $stmt->get_result();
+
+    if ($result->num_rows > 0) {
+        $row = $result->fetch_assoc();
+        $user = $row[$userColumn];
+        $dob = $row[$dobColumn];
+        $age = $row[$ageColumn];
+        $phone = $row[$phoneColumn];
+        $place = $row[$placeColumn];
+        $email = $row[$emailColumn];
+        $password = $row[$passwordColumn];
+        $address = $row[$addressColumn];
+        $mainArea = $row[$mainAreaColumn];
+    } else {
+        echo "<div class='error'>User not found.</div>";
+        exit();
+    }
+
+    // Handle form submission
+    if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+        // Update the user's information in the appropriate table
+        $user = $_POST['user'];
+        $dob = $_POST['dob'];
+        $age = $_POST['age'];
+        $phone = $_POST['phone'];
+        $place = $_POST['place'];
+        $email = $_POST['email'];
+        $password = $_POST['password'];
+        $address = $_POST['address'];
+        $mainArea = $_POST['main_area'];
+
+        $sql = "UPDATE $table SET $userColumn = ?, $dobColumn = ?, $ageColumn = ?, $phoneColumn = ?, $placeColumn = ?, $emailColumn = ?, $passwordColumn = ?, $addressColumn = ?, $mainAreaColumn = ? WHERE $userColumn = ?";
+        $stmt = $conn->prepare($sql);
+        $stmt->bind_param("ssssssssss", $user, $dob, $age, $phone, $place, $email, $password, $address, $mainArea, $username);
+        $stmt->execute();
+
+        if ($stmt->affected_rows > 0) {
+            echo "<div class='success'>User information updated successfully.</div>";
+        } else {
+            echo "<div class='error'>Failed to update user information.</div>";
+        }
+    }
+
+    // Close the database connection
+    $stmt->close();
+    $conn->close();
+    ?>
+
+    <div class="container">
+        <h2>Manage User Profile</h2>
+        <div class="section-left">
+            <form method="POST">
+                <div class="form-group">
+                    <label for="user">User</label>
+                    <input type="text" id="user" name="user" value="<?php echo $user; ?>" required>
+                </div>
+                <div class="form-group">
+                    <label for="dob">Date of Birth</label>
+                    <input type="date" id="dob" name="dob" value="<?php echo $dob; ?>" required>
+                </div>
+                <div class="form-group">
+                    <label for="age">Age</label>
+                    <input type="text" id="age" name="age" value="<?php echo $age; ?>" required>
+                </div>
+                <div class="form-group">
+                    <label for="phone">Phone Number</label>
+                    <input type="text" id="phone" name="phone" value="<?php echo $phone; ?>" required>
+                </div>
+                <div class="form-group">
+                    <label for="place">Place</label>
+                    <input type="text" id="place" name="place" value="<?php echo $place; ?>" required>
+                </div>
+        </div>
+        <div class="section-right">
+            <div class="form-group">
+                <label for="email">Email</label>
+                <input type="email" id="email" name="email" class="email" value="<?php echo $email; ?>" required>
+            </div>
+            <div class="form-group">
+                <label for="password">Password</label>
+                <div class="password-input">
+                    <input type="password" id="password" name="password" value="<?php echo $password; ?>" required>
+                    <i class="fas fa-eye toggle-password"></i>
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="address">Address</label>
+                <input type="text" id="address" name="address" value="<?php echo $address; ?>" required>
+            </div>
+            <div class="form-group">
+                <label for="main_area">Main Area</label>
+                <input type="text" id="main_area" name="main_area" value="<?php echo $mainArea; ?>" required>
+            </div>
+            <input type="submit" value="Update">
+            </form>
+        </div>
+    </div>
+
+    <script>
+        const passwordInput = document.getElementById('password');
+        const togglePassword = document.querySelector('.toggle-password');
+
+        togglePassword.addEventListener('click', function() {
+            const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
+            passwordInput.setAttribute('type', type);
+            this.classList.toggle('fa-eye-slash');
+        });
+    </script>
+</body>
+
+</html>

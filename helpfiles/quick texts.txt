@@ -1,0 +1,135 @@
+.go-back {
+            padding: 10px;
+            text-align: center;
+            background-color: orange;
+            cursor: pointer;
+            color: white;
+            text-decoration: none;
+            margin: 20px;
+            position: relative;
+            top: -25px;
+            left: -8px;
+            border-radius: 5px;
+        }
+
+        .go-back:hover {
+            background-color: #0088cc;
+            transition: 0.2s linear;
+        }
+
+        .back-button {
+            position: relative;
+            top: 30px;
+            margin-left: 10px;
+        }
+<div class="back-button">
+        <a href="govn_landing.php" class="go-back">⬅️ GO BACK</a>
+</div>
+------------------------------------------------------------------------------------------------------------------------------------------------
+/* MARQUEE CODE CSS SECTION STARTS */
+
+        .marquee-container {
+            width: 60%;
+            overflow: hidden;
+            white-space: nowrap;
+            /* background-color: #f7f7f7; */
+            padding: 10px 0;
+            position: relative;
+            top: 70px;
+            border: 1px solid black;
+            border-radius: 25px;
+            left: 18%;
+            background: linear-gradient(45deg, #ffcc00, #ff6666, #ff66b2, #cc66ff, #6699ff, #66ccff);
+            background-size: 600% 600%;
+            animation: gradientAnimation 20s linear infinite;
+            color: #fff;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.4);
+        }
+
+        /* Style for the marquee content */
+        .marquee-content {
+            display: inline-block;
+            margin-right: 100%;
+            animation: marquee 15s linear infinite;
+        }
+
+        /* Keyframes for the marquee animation */
+        @keyframes marquee {
+            0% {
+                transform: translateX(100%);
+            }
+
+            100% {
+                transform: translateX(-100%);
+            }
+        }
+
+        @keyframes gradientAnimation {
+            0% {
+                background-position: 0% 0%;
+            }
+
+            100% {
+                background-position: 600% 600%;
+            }
+        }
+
+        /* MARQUEE CODE CSS SECTION ENDS */
+<!-- MARQUEE STARTS -->
+    <div class="marquee-container">
+        <div class="marquee-content">
+            Let's create a supportive and respectful environment. Please refrain from sharing inappropriate content, engaging in spam, or promoting any prohibited activities. Together, we can build a positive community.
+        </div>
+    </div>
+    <!-- MARQUEE ENDS -->
+--------------------------------------------------------------------------------------------------------------------------------------------------------   
+Certainly! Here are the examples with the provided luxurious color combinations converted to use the rgba color format in the linear gradient background:
+
+1. Gold and Deep Blue:
+```css
+background-image: linear-gradient(to right, rgba(255, 215, 0, 1), rgba(0, 31, 63, 1), rgba(255, 215, 0, 1));
+```
+
+2. Elegant Silver and Black:
+```css
+background-image: linear-gradient(to right, rgba(192, 192, 192, 1), rgba(0, 0, 0, 1), rgba(192, 192, 192, 1));
+```
+
+3. Royal Purple and Gold:
+```css
+background-image: linear-gradient(to right, rgba(106, 13, 173, 1), rgba(255, 215, 0, 1), rgba(106, 13, 173, 1));
+```
+
+4. Champagne and Rose Gold:
+```css
+background-image: linear-gradient(to right, rgba(247, 216, 168, 1), rgba(183, 110, 121, 1), rgba(247, 216, 168, 1));
+```
+
+5. Deep Red and Dark Brown:
+```css
+background-image: linear-gradient(to right, rgba(139, 0, 0, 1), rgba(56, 29, 12, 1), rgba(139, 0, 0, 1));
+```
+
+6. Ocean Blue and Aquamarine:
+```css
+background-image: linear-gradient(to right, rgba(0, 116, 217, 1), rgba(127, 219, 255, 1), rgba(0, 116, 217, 1));
+```
+
+7. Opulent Emerald and Gold:
+```css
+background-image: linear-gradient(to right, rgba(80, 200, 120, 1), rgba(255, 215, 0, 1), rgba(80, 200, 120, 1));
+```
+
+8. Luxe Burgundy and Cream:
+```css
+background-image: linear-gradient(to right, rgba(128, 0, 32, 1), rgba(255, 253, 208, 1), rgba(128, 0, 32, 1));
+```
+
+In these examples, I've converted the color values to the rgba format while preserving the same color combinations for the linear gradient background.
+
+Remember to adjust the colors, stops, and positions as per your design preferences. You can also experiment with different combinations to achieve the desired premium and luxurious look for your background.
+--------------------------------------------------------------------------------------------------------------------------------
+.problem-count:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+        }

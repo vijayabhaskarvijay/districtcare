@@ -1,0 +1,240 @@
+ <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+ <li><a href="notification_page.php"><i class="fas fa-bell"></i></a></li>
+=========================================================================================================================
+sk.eyJ1Ijoic3JpcmFtLXYiLCJhIjoiY2xsOHc2eHpnMWg3NDNmbzFjeWtmdG5iZSJ9.BU5uRK_DtKF1gB0n3TVAHg
+
+================================================================================================================================
+Revenue Department
+Public Works Department (PWD)
+Municipal Corporation
+Health Department
+Education Department
+Agriculture Department
+Police Department
+Fire and Rescue Services Department
+Social Welfare Department
+Rural Development Department
+Transport Department
+Forest Department
+Animal Husbandry Department
+Town Planning Department
+Electricity Department
+Water Supply and Sanitation Department
+Public Distribution System (PDS) Department
+Information and Public Relations Department
+
+
+PLACES
+gobichettipalayam 
+  Erangattur,
+  Getticheyur,
+  Gobichettipalayam East,
+  Gobichettipalayam South,
+  Kallipatti,
+  Karattadipalayam,
+  Kasipalayam (erode),
+  Kidarai,
+  Kodiveri,
+  Kolappalur(erode),
+  Kummakalipalayam,
+  Nambiyur,
+  Nanjagoundenpalayam,
+  Pariyur,
+  Vellalapalayam,
+  Pattimaniakaranpalayam,
+  Perumugaipudur,
+  Pudukkaraipudur,
+  Pudupalayam (erode),
+  Sakthinagar,
+  Sokkumaripalayam,
+  Suriappampalayam,
+  Theethampalayam,Thuckanaickenpalayam
+   
+   
+Sathyamangalam  
+  Araipalayam,
+  Ariyappampalayam,
+  Bannari,
+  Bhavanisagar,
+  Chikkahalli,
+  Dasappagoundanpudur,
+  Desipalayam,
+  Dhimbam,
+  Doddapura,
+  Germalam,
+  Gumtapuram,
+  Kalkadambur,
+  Karalayam,
+  Karapadi,
+  Kembanaickenpalayam,
+  Komarapalayam Sathy,
+  Kondapanaickenpalayam,
+  Kottuveerampalayam,
+  Nochikuttai,
+  Periyur,
+  Puduvadavalli,
+  Punjai Puliampatti,
+  Rangasamudram,
+  Sathy Bazaar,
+  Sathyamangalam,
+  Savakattupalayam,
+  Soosaipuram,
+  Talavadi,
+  Thingalur
+
+Certainly! Here's a modern, minimalist UI/UX idea for your index.php page with a web3 theme:
+
+1. Color Scheme:
+   - Use a combination of light and dark shades of blue as the primary colors. These colors represent the digital and futuristic aspects of web3 technology. For example, you can use #233D61 as the dark blue color and #6EA8E1 as the light blue color.
+
+2. Typography:
+   - Choose a clean and modern font for your headings and body text. Some popular options are Montserrat, Roboto, or Inter. Use a bold variation for headings and a regular or light variation for body text to create a visual hierarchy.
+
+3. Layout:
+   - Utilize a responsive and grid-based layout to ensure consistency and adaptability across different devices. Consider using a single-column layout for the content to provide a focused and immersive experience.
+
+4. Hero Section:
+   - Use a large, high-resolution image or illustration related to urban connectivity, such as futuristic cityscapes or interconnected networks. Overlay the image with a semi-transparent layer to add depth and make the text more readable.
+
+5. Navigation:
+   - Implement a clean and minimalistic navigation menu at the top of the page. Use a hamburger icon that expands into a vertical sidebar menu on smaller screens. Consider using smooth scrolling to enhance the user experience when navigating through different sections of the page.
+
+6. Card-based Approach:
+   - Organize the content into distinct sections using cards. Each card can represent a specific feature or service provided by UrbanLink. Use a minimalist design with subtle shadow effects to create a sense of depth and interactivity.
+
+7. Interactive Elements:
+   - Implement subtle hover effects on interactive elements like buttons, links, and cards. For example, you can change the background color or add a subtle animation to indicate interactivity.
+
+8. Web3 Elements:
+   - Incorporate web3-related icons or graphics to highlight the connection to blockchain technology. This can include icons representing decentralized networks, blockchain blocks, or smart contract symbols. Ensure that these elements blend harmoniously with the overall design.
+
+9. Call-to-Action:
+   - Include a prominent call-to-action button or section to encourage users to take action, such as signing up or exploring the platform. Use a contrasting color and clear wording to attract attention.
+
+10. Footer:
+    - Keep the footer section minimalistic with copyright information and social media icons for easy access to UrbanLink's social profiles.
+
+Remember to test the design on different devices and screen sizes to ensure responsiveness and usability. Customizing the CSS based on the provided color scheme, typography, and layout guidelines will help bring this modern, minimalist UI/UX idea to life on your index.php page.
+
+
+Sure, here are 10 problem types for each department:
+
+**Revenue Department:**
+"Tax Evasion",
+"Land Ownership Disputes",
+"Unfair Property Assessment",
+"Corruption in Land Transactions",
+"Delayed Land Title Issuance",
+"Inconsistent Property Tax Calculation",
+"Unauthorized Land Encroachments",
+"Land Use Violations",
+"Fraudulent Land Transfers",
+"Lack of Transparent Land Records"
+
+**Public Works Department (PWD):**
+"Poor Road Conditions",
+"Insufficient Road Signage",
+"Inadequate Drainage Systems",
+"Traffic Congestion at Junctions",
+"Dilapidated Bridges and Overpasses",
+"Neglected Public Infrastructure",
+"Inefficient Street Lighting",
+"Unsafe Pedestrian Walkways",
+"Slow Construction Projects",
+"Lack of Maintenance Planning"
+
+**Municipal Corporation:**
+"Improper Waste Disposal",
+"Inadequate Garbage Collection",
+"Insufficient Recycling Facilities",
+"Lack of Public Toilets",
+"Unsanitary Slums and Settlements",
+"Noise Pollution Violations",
+"Inadequate Green Spaces",
+"Unsafe Building Structures",
+"Overcrowded Public Transport",
+"Ineffective Urban Planning"
+
+**Health Department:**
+"Inadequate Healthcare Access",
+"Shortage of Medical Staff",
+"Insufficient Medical Facilities",
+"Disease Outbreak Preparedness",
+"Poor Hospital Sanitation",
+"Inadequate Ambulance Services",
+"Limited Access to Medicines",
+"High Maternal and Infant Mortality",
+"Mental Health Neglect",
+"Lack of Preventive Healthcare Programs"
+
+**Education Department:**
+"Shortage of Qualified Teachers",
+"Inadequate Educational Facilities",
+"Outdated Curriculum",
+"High Dropout Rates",
+"Lack of Digital Learning Resources",
+"Educational Inequality",
+"Bullying and School Safety",
+"Limited Extracurricular Activities",
+"Teacher Training Deficiencies",
+"Insufficient Funding for Education"
+
+**Agriculture Department:**
+"Water Scarcity for Farming",
+"Crop Disease Outbreaks",
+"Inadequate Agricultural Extension Services",
+"Lack of Modern Farming Techniques",
+"Land Degradation and Soil Erosion",
+"Unfair Market Practices",
+"Pesticide Misuse and Environmental Impact",
+"Limited Access to Agricultural Credit",
+"Inefficient Irrigation Systems",
+"Lack of Agribusiness Opportunities"
+
+**Police Department:**
+"High Crime Rates",
+"Cybercrime and Digital Fraud",
+"Gang and Organized Crime Activities",
+"Drug Trafficking and Substance Abuse",
+"Community-Police Relations",
+"Insufficient Police Presence in Certain Areas",
+"Corruption in Law Enforcement",
+"Violence Against Women and Domestic Abuse",
+"Homicides and Murders",
+"Identity Theft and Robberies"
+
+**Fire and Rescue Services Department:**
+"Lack of Fire Safety Education",
+"Obsolete Firefighting Equipment",
+"Inadequate Emergency Response Training",
+"Urban Fire Hazards",
+"Industrial and Chemical Accidents",
+"Insufficient Fire Hydrants",
+"High-rise Building Evacuation Challenges",
+"Inadequate Fire Safety Regulations",
+"Poor Fire Drills and Preparedness",
+"Wildfire Prevention and Control"
+
+Social Welfare Department:
+"Homelessness and Lack of Shelter",
+"Elderly Care and Support",
+"Child Welfare and Protection",
+"Substance Abuse Rehabilitation",
+"Access to Healthcare for Vulnerable Groups",
+"Poverty Alleviation Programs",
+"Gender Discrimination and Violence",
+"Discrimination Against LGBTQ+ Community",
+"Disability Rights and Inclusion",
+"Mental Health Support"
+
+**Rural Development Department:**
+"Agricultural Productivity Gap",
+"Limited Access to Credit",
+"Lack of Basic Infrastructure",
+"Unemployment and Underemployment",
+"Landlessness and Land Rights",
+"Insufficient Rural Healthcare Services",
+"Educational Disparities in Rural Areas",
+"Lack of Potable Drinking Water",
+"Inadequate Connectivity to Markets",
+"Agricultural Market Exploitation"

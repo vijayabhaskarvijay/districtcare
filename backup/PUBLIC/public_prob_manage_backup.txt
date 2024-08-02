@@ -1,0 +1,507 @@
+<?php
+session_start();
+
+// Check if the user is not logged in
+if (!isset($_SESSION['user_id'])) {
+    // Redirect to the login page
+    header("Location: main_login.php");
+    exit();
+}
+
+// Database connection credentials
+$servername = "localhost";
+$dbUsername = "root";
+$dbPassword = "";
+$dbname = "urbanlink";
+
+// Create a PDO instance
+try {
+    $conn = new PDO("mysql:host=$servername;dbname=$dbname", $dbUsername, $dbPassword);
+    $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+} catch (PDOException $e) {
+    die("Database connection failed: " . $e->getMessage());
+}
+
+// Get the logged-in user's ID from the session
+$userId = $_SESSION['user_id'];
+
+// Fetch problems related to the logged-in user
+try {
+    $stmt = $conn->prepare("SELECT * FROM prob_details WHERE prob_user_id = :userId");
+    $stmt->bindParam(':userId', $userId);
+    $stmt->execute();
+    $problems = $stmt->fetchAll(PDO::FETCH_ASSOC);
+} catch (PDOException $e) {
+    die("Database error: " . $e->getMessage());
+}
+
+
+// Fetch the number of reports done by the user
+try {
+    $stmt = $conn->prepare("SELECT COUNT(*) AS report_count FROM prob_details WHERE prob_user_id = :userId");
+    $stmt->bindParam(':userId', $userId);
+    $stmt->execute();
+    $reportCount = $stmt->fetch(PDO::FETCH_ASSOC)['report_count'];
+} catch (PDOException $e) {
+    die("Database error: " . $e->getMessage());
+}
+
+// Fetch the number of completed problems for the user
+try {
+    $stmt = $conn->prepare("SELECT COUNT(*) AS completed_count FROM prob_details WHERE prob_user_id = :userId AND problem_status = 'Completed'");
+    $stmt->bindParam(':userId', $userId);
+    $stmt->execute();
+    $completedCount = $stmt->fetch(PDO::FETCH_ASSOC)['completed_count'];
+} catch (PDOException $e) {
+    die("Database error: " . $e->getMessage());
+}
+
+// PHP CODE FOR FILTERS
+// Get the filter and sort options from user input
+$filter = isset($_GET['filter']) ? $_GET['filter'] : 'all';
+$sort = isset($_GET['sort']) ? $_GET['sort'] : 'date_desc';
+
+// Define the SQL query based on filter and sort options
+$query = "SELECT * FROM prob_details WHERE prob_user_id = :userId";
+
+if ($filter == 'completed') {
+    $query .= " AND problem_status = 'Completed'";
+} elseif ($filter == 'inprogress') {
+    $query .= " AND problem_status != 'Completed'";
+}
+
+if ($sort == 'date_asc') {
+    $query .= " ORDER BY prob_date ASC";
+} elseif ($sort == 'date_desc') {
+    $query .= " ORDER BY prob_date DESC";
+} elseif ($sort == 'status_asc') {
+    $query .= " ORDER BY problem_status ASC";
+} elseif ($sort == 'status_desc') {
+    $query .= " ORDER BY problem_status DESC";
+}
+
+try {
+    $stmt = $conn->prepare($query);
+    $stmt->bindParam(':userId', $userId);
+    $stmt->execute();
+    $problems = $stmt->fetchAll(PDO::FETCH_ASSOC);
+} catch (PDOException $e) {
+    die("Database error: " . $e->getMessage());
+}
+
+// -----------------------------
+// Pagination configuration
+$problemsPerPage = 15;
+$page = isset($_GET['page']) ? $_GET['page'] : 1;
+$offset = ($page - 1) * $problemsPerPage;
+
+// Filter variables
+$department = isset($_GET['department']) ? $_GET['department'] : '';
+$search = isset($_GET['search']) ? $_GET['search'] : '';
+
+// Generate the WHERE condition based on filter values
+$whereCondition = '';
+if (!empty($department)) {
+    $whereCondition .= " WHERE prob_dept = '$department'";
+}
+if (!empty($search)) {
+    if (empty($whereCondition)) {
+        $whereCondition .= " WHERE prob_user_name LIKE '%$search%'";
+    } else {
+        $whereCondition .= " AND prob_user_name LIKE '%$search%'";
+    }
+}
+
+// Retrieve problems based on filter and pagination
+$sql = "SELECT * FROM prob_details" . $whereCondition . " LIMIT $offset, $problemsPerPage";
+$result = $conn->query($sql);
+
+// Count total problems for pagination
+$sqlCount = "SELECT COUNT(*) AS total FROM prob_details" . $whereCondition;
+$countResult = $conn->query($sqlCount);
+$rowCount = $countResult->fetch(PDO::FETCH_ASSOC)['total'];
+$totalPages = ceil($rowCount / $problemsPerPage);
+
+// -----------------------------
+
+?>
+
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Public Problem Management</title>
+    <link rel="icon" href="../images/urbanlink-logo.png" type="image/icon type">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <script src="https://kit.fontawesome.com/4c43584236.js" crossorigin="anonymous"></script>
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        /* GO BACK  START*/
+
+        .go-back {
+            padding: 10px;
+            text-align: center;
+            background-color: orange;
+            cursor: pointer;
+            color: white;
+            text-decoration: none;
+        }
+
+        .go-back:hover {
+            background-color: #0088cc;
+            transition: 0.2s linear;
+        }
+
+        .back-button {
+            position: relative;
+            top: 30px;
+            margin-left: 10px;
+        }
+
+
+        /* BO BACK ENDS */
+
+        body {
+            font-family: Arial, sans-serif;
+            /* background: linear-gradient(to bottom right, #f2f2f2, #ffffff); */
+            background-attachment: fixed;
+            background-image: url("../images/8685784_3915274.jpg");
+            background-size: cover;
+            background-position: center;
+            margin: 0;
+            padding: 0;
+        }
+
+        .container {
+            display: block;
+            width: 80%;
+            margin: 30px auto;
+            background-color: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(10px);
+            padding: 20px;
+            border-radius: 15px;
+            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+            overflow-y: auto;
+            height: 600px;
+            position: relative;
+            /* left: 40px; */
+            border: 1px solid rgba(255, 255, 255, 0.8);
+
+        }
+
+        /* PAGINATION CSS STARTS */
+        .pagination {
+            margin-top: 20px;
+            text-align: center;
+        }
+
+        .pagination a {
+            display: inline-block;
+            padding: 8px 16px;
+            text-decoration: none;
+            border: 1px solid #ddd;
+            color: #333;
+            transition: background-color 0.2s;
+        }
+
+        .pagination a.active {
+            background-color: #3498db;
+            color: white;
+            border: 1px solid #3498db;
+        }
+
+        .pagination a:hover {
+            background-color: red;
+        }
+
+        .pagination a:first-child {
+            margin-right: 10px;
+        }
+
+        .pagination a:last-child {
+            margin-left: 10px;
+        }
+
+        /* PAGINATION CSS ENDS */
+
+
+
+        /* CSS for the gadgets */
+        .gadgets {
+            display: flex;
+            margin-bottom: 20px;
+            /* flex-direction: column; */
+        }
+
+        .gadget {
+            background-color: #ffffff;
+            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+            padding: 10px;
+            border-radius: 5px;
+            text-align: center;
+            width: 200px;
+            margin: 20px;
+            position: relative;
+            top: -50px;
+            /* left: 180px; */
+
+        }
+
+        .gadget-title {
+            font-weight: bold;
+            color: #333333;
+        }
+
+        .gadget-value {
+            font-size: 24px;
+            color: #3498db;
+        }
+
+
+        .endmessage {
+            color: red;
+            border: 2px solid #2ecc71;
+            pad: 10px;
+            font-weight: 700;
+            background: #000000;
+            position: relative;
+            left: 300px;
+            top: -200px;
+        }
+
+        h2 {
+            text-align: center;
+            color: #333333;
+            margin-bottom: 20px;
+            position: relative;
+            top: -20px;
+        }
+
+        .problem {
+            border: 1px solid #cccccc;
+            border-radius: 5px;
+            padding: 10px;
+            margin-bottom: 15px;
+            position: relative;
+            top: -50px;
+        }
+
+        .problem .tags {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 10px;
+        }
+
+        .filter-sort {
+            display: flex;
+            /* justify-content: space-between; */
+            margin-bottom: 20px;
+            position: relative;
+            top: 20px;
+            left: -20px;
+            z-index: 1;
+            flex-direction: row-reverse;
+
+        }
+
+        .filter-sort select {
+            padding: 5px;
+            border-radius: 3px;
+        }
+
+        .problem .tag {
+            padding: 5px 10px;
+            font-size: 12px;
+            color: #ffffff;
+            border-radius: 5px;
+        }
+
+        .problem .title {
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+
+        .problem .description {
+            color: white;
+            margin-bottom: 10px;
+            background-color: #777777;
+            padding: 20px;
+            border-radius: 5px;
+        }
+
+        .problem .actions {
+            text-align: right;
+            position: relative;
+            display: flex;
+        }
+
+        .problem .actions button {
+            padding: 5px 10px;
+            background-color: #e74c3c;
+            color: #ffffff;
+            border: none;
+            cursor: pointer;
+            border-radius: 3px;
+            margin: 5px;
+        }
+
+        .problem .actions button:hover {
+            background-color: #000080;
+            transition: 0.3s ease-in-out;
+        }
+
+        @media only screen and (min-width:601px) and (max-width: 900px) {
+            .container {
+                width: 95%;
+            }
+        }
+
+        @media only screen and (min-width:300px) and (max-width: 600px) {
+            .container {
+                width: 95%;
+                margin: 30px auto;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="back-button">
+        <a href="public_user_landing.php" class="go-back">⬅️ GO BACK</a>
+    </div>
+    <div class="filter-sort">
+        <div class="filter">
+            <label for="filter">Filter by:</label>
+            <select id="filter" name="filter">
+                <option value="all" <?php if ($filter == 'all') echo 'selected'; ?>>All</option>
+                <option value="completed" <?php if ($filter == 'completed') echo 'selected'; ?>>Completed</option>
+                <option value="inprogress" <?php if ($filter == 'inprogress') echo 'selected'; ?>>In Progress</option>
+                <!-- Add other filter options if needed -->
+            </select>
+        </div>
+        <div class="sort">
+            <label for="sort">Sort by:</label>
+            <select id="sort" name="sort">
+                <option value="date_asc" <?php if ($sort == 'date_asc') echo 'selected'; ?>>Date (Oldest First)</option>
+                <option value="date_desc" <?php if ($sort == 'date_desc') echo 'selected'; ?>>Date (Newest First)</option>
+                <option value="status_asc" <?php if ($sort == 'status_asc') echo 'selected'; ?>>Status (A-Z)</option>
+                <option value="status_desc" <?php if ($sort == 'status_desc') echo 'selected'; ?>>Status (Z-A)</option>
+                <!-- Add other sort options if needed -->
+            </select>
+        </div>
+    </div>
+
+    <!-- Display the gadgets at the top of the page -->
+    <div class="container">
+        <h2>Public Problem Management</h2>
+        <div class="gadgets">
+            <div class="gadget">
+                <div class="gadget-title">Total Reports</div>
+                <div class="gadget-value"><?php echo $reportCount; ?></div>
+            </div>
+            <div class="gadget">
+                <div class="gadget-title">Completed Problems</div>
+                <div class="gadget-value"><?php echo $completedCount; ?></div>
+            </div>
+        </div>
+
+        <?php foreach ($problems as $problem) : ?>
+            <div class="problem">
+                <div class="tags">
+                    <div class="tag" style="background-color: #3498db;"><?php echo $problem['prob_user_name']; ?></div>
+                    <div class="tag" style="background-color: #2ecc71;"><?php echo $problem['prob_user_phone']; ?></div>
+                    <div class="tag" style="background-color: #033e3e;"><?php echo $problem['prob_user_loc']; ?></div>
+                    <div class="tag" style="background-color: #ff00ff;"><?php echo $problem['prob_user_mainarea']; ?></div>
+                    <div class="tag" style="background-color: orange;"><?php echo $problem['prob_dept']; ?></div>
+                    <div class="tag" style="background-color: #000000;"><?php echo $problem['prob_type']; ?></div>
+                    <div class="tag" style="background-color: #000080;"><?php echo $problem['prob_loc']; ?></div>
+                    <div class="tag" style="background-color: #66cf;"><?php echo $problem['prob_date']; ?></div>
+                </div>
+                <div class="description">
+                    <!-- Display the problem description fetched from the prob_Desc column -->
+                    <?php echo nl2br($problem['prob_desc']); ?>
+                </div>
+                <div class="actions">
+                    <!-- Instead of submitting the form, set the problem details in session variables -->
+                    <?php
+                    $_SESSION['feedback_problem_id'] = $problem['prob_id'];
+                    $_SESSION['feedback_user_name'] = $problem['prob_user_name'];
+                    $_SESSION['feedback_prob_type'] = $problem['prob_type'];
+                    $_SESSION['feedback_prob_loc'] = $problem['prob_loc'];
+                    $_SESSION['feedback_prob_date'] = $problem['prob_date'];
+                    $_SESSION['feedback_prob_dept'] = $problem['prob_dept'];
+                    $_SESSION['feedback_prob_desc'] = $problem['prob_desc'];
+                    ?>
+                    <!-- Redirect to public_feedback.php -->
+                    <a href="public_feedback.php" class="feedback-link">
+                        <i class="fa-solid fa-comment"></i>
+                    </a>
+
+                    <!-- Set the problem ID and problem status in session variables -->
+                    <?php
+                    $_SESSION['tracked_problem_id'] = $problem['prob_id'];
+                    $_SESSION['tracked_problem_status'] = $problem['problem_status'];
+                    $_SESSION['tracked_user_name'] = $problem['prob_user_name'];
+                    $_SESSION['tracked_prob_type'] = $problem['prob_type'];
+                    $_SESSION['tracked_prob_loc'] = $problem['prob_loc'];
+                    $_SESSION['tracked_prob_date'] = $problem['prob_date'];
+                    $_SESSION['tracked_prob_dept'] = $problem['prob_dept'];
+                    $_SESSION['tracked_prob_usermainarea'] = $problem['prob_user_mainarea'];
+                    $_SESSION['tracked_prob_userphone'] = $problem['prob_user_phone'];
+                    $_SESSION['tracked_prob_userloc'] = $problem['prob_user_loc'];
+                    $_SESSION['tracked_prob_desc'] = $problem['prob_desc'];
+                    ?>
+                    <!-- Redirect to prob_status_track.php -->
+                    <a href="prob_status_track.php" class="track-link">
+                        <i class="fas fa-route"></i> Track
+                    </a>
+
+                </div>
+            </div>
+        <?php endforeach; ?>
+    </div>
+
+    <!-- PAGINATION CODES SECTION -->
+    <div class="pagination">
+        <?php
+        $numLinks = min($totalPages, 10); // Display maximum of 10 links
+        $startPage = max($page - floor($numLinks / 2), 1);
+        $endPage = $startPage + $numLinks - 1;
+
+        if ($endPage > $totalPages) {
+            $startPage = max($totalPages - $numLinks + 1, 1);
+            $endPage = $totalPages;
+        }
+
+        if ($page > 1) {
+            echo '<a href="?page=' . ($page - 1) . '&department=' . $department . '&search=' . $search . '">Previous</a>';
+        }
+
+        for ($i = $startPage; $i <= $endPage; $i++) {
+            echo '<a href="?page=' . $i . '&department=' . $department . '&search=' . $search . '"';
+            if ($i == $page) {
+                echo ' class="active"';
+            }
+            echo '>' . $i . '</a>';
+        }
+
+        if ($page < $totalPages) {
+            echo '<a href="?page=' . ($page + 1) . '&department=' . $department . '&search=' . $search . '">Next</a>';
+        }
+        ?>
+    </div>
+    </div>
+
+    <!-- PAGINATION CODES SECTION -->
+
+    <script src="https://kit.fontawesome.com/your-font-awesome-kit.js" crossorigin="anonymous"></script>
+</body>
+
+</html>
+

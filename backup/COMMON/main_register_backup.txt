@@ -1,0 +1,280 @@
+ALL DONE NEED TO WORK ON UI ONLY
+NEED TO DO IS TO SHOW MESSAGE AT TOP
+LAST UPDATED:-
+    1.AGE FACTOR --WORKING PROPERLY 
+
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>UrbanLink - Registration</title>
+    <link rel="icon" href="images/urbanlink-logo.png" type="image/icon type">
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+        }
+
+        .container {
+            width: 700px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: maroon;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            animation: fade-in 0.5s ease-in-out;
+        }
+
+        @keyframes fade-in {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        h2 {
+            text-align: center;
+            margin-bottom: 30px;
+            color: white;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            font-weight: bold;
+            margin-bottom: 5px;
+            color: white;
+        }
+
+        .form-group input[type="text"],
+        .form-group input[type="email"],
+        .form-group input[type="password"],
+        .form-group select,
+        .form-group textarea {
+            width: 600px;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            font-size: 16px;
+            transition: border-color 0.3s ease-in-out;
+            position: relative;
+            left: 20px;
+        }
+
+        .form-group select option {
+            font-size: 16px;
+        }
+
+        .form-group textarea {
+            resize: vertical;
+        }
+
+        .form-group input[type="text"]:hover,
+        .form-group input[type="email"]:hover,
+        .form-group input[type="password"]:hover,
+        .form-group select:hover,
+        .form-group textarea:hover {
+            border-color: orange;
+        }
+
+        .form-group .error-message {
+            color: #ff0000;
+            margin-top: 5px;
+        }
+
+        .btn {
+            display: block;
+            width: 100%;
+            padding: 10px;
+            background-color: orange;
+            color: white;
+            font-size: 16px;
+            text-align: center;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.3s ease-in-out;
+        }
+
+        .btn:hover {
+            background-color: maroon;
+        }
+
+        .success-message {
+            color: #4caf50;
+            text-align: center;
+            margin-top: 20px;
+        }
+    </style>
+
+</head>
+
+<body>
+    <?php
+    // Database connection details
+    $servername = "localhost";
+    $username = "root";
+    $password = "";
+    $dbname = "urbanlink";
+
+    // Create connection
+    $conn = new mysqli($servername, $username, $password, $dbname);
+
+    // Check connection
+    if ($conn->connect_error) {
+        die("Connection failed: " . $conn->connect_error);
+    }
+
+    if (isset($_POST['submit'])) {
+        $name = $_POST['name'];
+        $phone = $_POST['phone'];
+        $email = $_POST['email'];
+        $password = $_POST['password'];
+        $dob = $_POST['dob'];
+        $address = $_POST['address'];
+        $place = $_POST['place'];
+        $mainArea = $_POST['main_area'];
+
+        // Calculate age based on the entered date of birth
+        $birthDate = new DateTime($dob);
+        $currentDate = new DateTime();
+        $age = $currentDate->diff($birthDate)->y;
+
+        // Check if the user is at least 20 years old
+        if ($age >= 20) {
+            // Generate unique user ID based on the selected place
+            $prefix = ($place == 'gobichettipalayam') ? 'GBI' : 'STH';
+            $user_id = $prefix . uniqid();
+
+            // Insert into public_user_details table
+            $sql_public = "INSERT INTO public_user_details (public_user_id, public_user_name, public_user_dob, public_user_phone, public_user_email, public_user_password, public_user_address, public_user_place, public_user_main_area)
+                VALUES ('$user_id', '$name', '$dob', '$phone', '$email', '$password', '$address', '$place', '$mainArea')";
+
+            // Execute query for public_user_details table
+            if ($conn->query($sql_public) === TRUE) {
+                $success_message = "Registration successful! Your user ID is: " . $user_id;
+
+                // Insert into selected place table (gobi_users or sathy_users)
+                if ($place == 'gobichettipalayam') {
+                    $sql_place = "INSERT INTO gobi_users (gobi_user_id, gobi_user_name, gobi_user_dob, gobi_user_phone_number, gobi_user_email, gobi_user_password, gobi_user_address, gobi_user_place, gobi_user_main_area, gobi_user_age)
+                        VALUES ('$user_id', '$name', '$dob', '$phone', '$email', '$password', '$address', '$place', '$mainArea', '$age')";
+                } elseif ($place == 'sathyamangalam') {
+                    $sql_place = "INSERT INTO sathy_users (sathy_user_id, sathy_user_name, sathy_user_dob, sathy_user_phone_number, sathy_user_email, sathy_user_password, sathy_user_address, sathy_user_place, sathy_user_main_area, sathy_user_age)
+                        VALUES ('$user_id', '$name', '$dob', '$phone', '$email', '$password', '$address', '$place', '$mainArea', '$age')";
+                } else {
+                    $error_message = "Invalid place selected.";
+                }
+
+                // Execute query for selected place table
+                if (isset($sql_place) && $conn->query($sql_place) !== TRUE) {
+                    $error_message = "Error: " . $sql_place . "<br>" . $conn->error;
+                }
+            } else {
+                $error_message = "Error: " . $sql_public . "<br>" . $conn->error;
+            }
+        } else {
+            $warning_message = "You must be at least 20 years old to register.";
+        }
+    }
+
+    // Close the database connection
+    $conn->close();
+    ?>
+
+    <div class="container">
+        <h2>Registration Form</h2>
+        <form method="post" action="">
+            <div class="form-group">
+                <label for="name">Name:</label>
+                <input type="text" id="name" name="name" required>
+            </div>
+            <div class="form-group">
+                <label for="phone">Phone Number:</label>
+                <input type="text" id="phone" name="phone" required>
+            </div>
+            <div class="form-group">
+                <label for="email">Email:</label>
+                <input type="email" id="email" name="email" required>
+            </div>
+            <div class="form-group">
+                <label for="password">Password:</label>
+                <input type="password" id="password" name="password" required>
+            </div>
+            <div class="form-group">
+                <label for="dob">Date of Birth:</label>
+                <input type="date" id="dob" name="dob" required>
+            </div>
+            <div class="form-group">
+                <label for="address">Address:</label>
+                <textarea id="address" name="address" rows="4" required></textarea>
+            </div>
+            <div class="form-group">
+                <label for="place">Place:</label>
+                <select id="place" name="place" required>
+                    <option value="">Select a place</option>
+                    <option value="gobichettipalayam">Gobichettipalayam</option>
+                    <option value="sathyamangalam">Sathyamangalam</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="main_area">Main Area:</label>
+                <input type="text" id="main_area" name="main_area" required>
+            </div>
+            <input type="submit" name="submit" value="Register" class="btn">
+        </form>
+        <?php if (isset($success_message)) { ?>
+            <div class="toast success-message">
+                <p><?php echo $success_message; ?></p>
+            </div>
+            <script>
+                // Redirect to index.php after 3 seconds
+                setTimeout(function() {
+                    window.location.href = 'index.php';
+                }, 3000);
+            </script>
+        <?php } elseif (isset($warning_message)) { ?>
+            <div class="toast warning-message">
+                <p><?php echo $warning_message; ?></p>
+            </div>
+            <script>
+                // Redirect to index.php after 3 seconds
+                setTimeout(function() {
+                    window.location.href = 'index.php';
+                }, 3000);
+            </script>
+        <?php } elseif (isset($error_message)) { ?>
+            <div class="toast error-message">
+                <p><?php echo $error_message; ?></p>
+            </div>
+            <script>
+                // Show toast messages
+                setTimeout(function() {
+                    var errorMessage = document.querySelector('.toast.error-message');
+                    if (errorMessage) {
+                        errorMessage.style.display = 'block';
+                    }
+                }, 0);
+
+                // Redirect to index.php after 3 seconds
+                setTimeout(function() {
+                    window.location.href = 'index.php';
+                }, 3000);
+            </script>
+        <?php } ?>
+    </div>
+
+</body>
+
+</html>
+

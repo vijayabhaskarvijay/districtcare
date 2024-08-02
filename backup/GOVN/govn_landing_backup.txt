@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Government Landing Page</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <style>
+        /* General Styles */
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+        }
+
+        .container {
+            max-width: 960px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        /* Navbar Styles */
+        .navbar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background-color: #333;
+            color: #fff;
+            padding: 10px;
+        }
+
+        .navbar ul {
+            display: flex;
+            list-style-type: none;
+        }
+
+        .navbar ul li {
+            margin-right: 10px;
+        }
+
+        .navbar ul li a {
+            color: #fff;
+            text-decoration: none;
+            padding: 5px;
+        }
+
+        /* Content Styles */
+        .content {
+            background-color: #fff;
+            padding: 20px;
+            margin-top: 20px;
+        }
+
+        .content h2 {
+            margin-bottom: 10px;
+        }
+
+        .content p {
+            margin-bottom: 20px;
+        }
+
+        .content .post {
+            margin-bottom: 20px;
+            padding: 10px;
+            background-color: #f9f9f9;
+            border-radius: 4px;
+        }
+
+        .content .post .details span {
+            display: block;
+            margin-bottom: 5px;
+        }
+
+        .content .post .tags {
+            margin-bottom: 10px;
+        }
+
+        .content .post .tags span {
+            display: inline-block;
+            padding: 5px 10px;
+            border-radius: 4px;
+            margin-right: 5px;
+            font-weight: bold;
+        }
+
+        .content .post .tags .tag-1 {
+            background-color: #f44336;
+            color: #fff;
+        }
+
+        .content .post .tags .tag-2 {
+            background-color: #9c27b0;
+            color: #fff;
+        }
+
+        .content .post .tags .tag-3 {
+            background-color: #03a9f4;
+            color: #fff;
+        }
+
+        .content .post .tags .tag-4 {
+            background-color: #4caf50;
+            color: #fff;
+        }
+
+        .content .post .tags .tag-5 {
+            background-color: #ff5722;
+            color: #fff;
+        }
+
+        /* Logout Styles */
+        .logout-btn {
+            background-color: #f44336;
+            color: #fff;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 4px;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+    </style>
+</head>
+
+<body>
+    <?php
+    session_start();
+
+    // Check if user is logged in
+    if (!isset($_SESSION['govn_staff_id'])) {
+        header("Location: govn_login.php");
+        exit();
+    }
+
+    // Retrieve public posts from the database
+    // Replace the database connection details
+    $servername = "localhost";
+    $username = "root";
+    $password = "";
+    $dbname = "urbanlink";
+
+    $conn = new mysqli($servername, $username, $password, $dbname);
+
+    // Check connection
+    if ($conn->connect_error) {
+        die("Connection failed: " . $conn->connect_error);
+    }
+
+    // Prepare SQL query
+    $sql = "SELECT * FROM public_posts";
+
+    // Execute the query
+    $result = $conn->query($sql);
+    ?>
+
+    <div class="container">
+        <div class="navbar">
+            <ul>
+                <li><a href="govn_profile_manage.php">Profile</a></li>
+                <li><a href="govn_probpage.php">See Problem</a></li>
+                <li><a href="govn_create_post.php">Create Post</a></li>
+                <li><a href="govn_manage_post.php">Manage Post</a></li>
+            </ul>
+            <div class="notification-icon">
+                <a href="notification_page.php"><i class="fas fa-bell"></i></a>
+            </div>
+            <form method="POST" action="">
+                <input type="submit" name="logout" value="Logout" class="logout-btn">
+            </form>
+        </div>
+
+        <div class="content">
+            <h2>Welcome, <?php echo $_SESSION['govn_staff_name']; ?></h2>
+            <p>Email: <?php echo $_SESSION['govn_staff_email']; ?></p>
+            <p>Location: <?php echo $_SESSION['govn_staff_loc']; ?></p>
+
+            <h2>Public Posts</h2>
+
+            <?php
+            if ($result->num_rows > 0) {
+                // Display public posts
+                while ($row = $result->fetch_assoc()) {
+                    $postID = $row['pp_id'];
+                    $username = $row['pp_username'];
+                    $userphone = $row['pp_userphone'];
+                    $userpost_description = $row['pp_userpost_description'];
+                    $userloc = $row['pp_userloc'];
+                    $date = $row['pp_date'];
+                    $image = $row['pp_image'];
+            ?>
+
+                    <div class="post">
+                        <div class="details">
+                            <span class="tag-1">Username: <?php echo $username; ?></span>
+                            <span class="tag-2">Location: <?php echo $userloc; ?></span>
+                            <span class="tag-3">Phone: <?php echo $userphone; ?></span>
+                            <span class="tag-4">Date: <?php echo $date; ?></span>
+                        </div>
+                        <p><?php echo $userpost_description; ?></p>
+                        <?php
+                        if (!empty($image)) {
+                            echo '<img src="' . $image . '" alt="Post Image" width="300">';
+                        }
+                        ?>
+                        <button onclick="openPopup(<?php echo $postID; ?>)">View Details</button>
+                    </div>
+            <?php
+                }
+            } else {
+                echo '<p>No public posts found.</p>';
+            }
+
+            // Close database connection
+            $conn->close();
+            ?>
+
+        </div>
+    </div>
+
+    <script>
+        // Logout function
+        function logout() {
+            // Clear session data
+            <?php
+            session_unset();
+            session_destroy();
+            ?>
+
+            // Redirect to index.php
+            window.location.href = "index.php";
+        }
+
+        // Attach logout function to logout button
+        document.querySelector('.logout-btn').addEventListener('click', logout);
+    </script>
+</body>
+
+</html>

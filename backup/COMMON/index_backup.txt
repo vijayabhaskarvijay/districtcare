@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>UrbanLink - Be Connected!</title>
+    <link rel="icon" href="images/urbanlink-logo.png" type="image/icon type">
+    <link rel="stylesheet" href="style.css">
+    <style>
+        body {
+            background: linear-gradient(90deg, #3A75C4 31%, #F1F5FC 54%, #FF9F00 85%);
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+
+        .navigation {
+            background-color: #3A75C4;
+            height: 70px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 20px;
+            transition: background-color 0.3s ease;
+        }
+
+        .brand a {
+            color: #FFFFFF;
+            text-decoration: none;
+            font-size: 1.4em;
+            text-transform: uppercase;
+            font-weight: bold;
+            transition: color 0.3s ease;
+        }
+
+        .nav-container {
+            max-width: 1000px;
+            margin: 0 auto;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        nav ul {
+            list-style: none;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            align-items: center;
+        }
+
+        nav ul li {
+            position: relative;
+        }
+
+        nav ul li a {
+            display: block;
+            padding: 0 20px;
+            line-height: 70px;
+            color: #FFFFFF;
+            text-decoration: none;
+            transition: background-color 0.3s ease;
+        }
+
+        nav ul li a:hover {
+            background-color: #2581DC;
+        }
+
+        nav ul li ul {
+            position: absolute;
+            top: 100%;
+            left: 0;
+            background-color: #3A75C4;
+            display: none;
+            padding: 10px 0;
+        }
+
+        nav ul li:hover ul {
+            display: block;
+        }
+
+        nav ul li ul li {
+            min-width: 190px;
+        }
+
+        nav ul li ul li a {
+            padding: 10px 20px;
+            line-height: 20px;
+        }
+
+        .content {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            height: calc(100vh - 70px);
+            box-sizing: border-box;
+        }
+
+        .left-section {
+            flex: 1;
+            text-align: center;
+        }
+
+        .hero-image {
+            width: 100%;
+            max-width: 550px;
+            height: auto;
+        }
+
+        .separator {
+            display: none;
+        }
+
+        .right-section {
+            flex: 1;
+            text-align: center;
+        }
+
+        .description {
+            background-color: #FF9F00;
+            padding: 20px;
+            color: white;
+            animation: fadeInAnimation 2s;
+            transition: background-color 0.3s ease;
+        }
+
+        footer {
+            background-color: #3A75C4;
+            color: white;
+            text-align: center;
+            padding: 10px;
+            transition: background-color 0.3s ease;
+        }
+
+        @keyframes fadeInAnimation {
+            0% {
+                opacity: 0;
+            }
+
+            100% {
+                opacity: 1;
+            }
+        }
+
+        @media screen and (max-width: 768px) {
+            .nav-container {
+                flex-direction: column;
+            }
+
+            nav ul {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            nav ul li {
+                position: relative;
+                margin-bottom: 10px;
+            }
+
+            nav ul li ul {
+                position: static;
+                background-color: transparent;
+                display: block;
+                padding: 0;
+            }
+
+            nav ul li ul li {
+                min-width: auto;
+            }
+
+            .content {
+                height: auto;
+                padding-top: 40px;
+                padding-bottom: 40px;
+            }
+
+            .left-section,
+            .right-section {
+                flex-basis: 100%;
+            }
+
+            .separator {
+                display: block;
+                width: 100%;
+                height: 1px;
+                background-color: #2AA572;
+                margin: 20px 0;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <section class="navigation">
+        <div class="nav-container">
+            <div class="brand">
+                <a href="#!">UrbanLink</a>
+            </div>
+            <nav>
+                <ul class="nav-list">
+                    <li>
+                        <a href="#!">Login</a>
+                        <ul class="nav-dropdown">
+                            <li>
+                                <a href="main_login.php">Public User</a>
+                            </li>
+                            <li>
+                                <a href="govn_login.php">Government Staff</a>
+                            </li>
+                            <li>
+                                <a href="admin_login.php">Admin</a>
+                            </li>
+                            <li>
+                                <a href="ngo_login.php">NGO</a>
+                            </li>
+                        </ul>
+                    </li>
+                    <li>
+                        <a href="#!">Register</a>
+                        <ul class="nav-dropdown">
+                            <li>
+                                <a href="main_register.php">Public User Register</a>
+                            </li>
+                            <li>
+                                <a href="ngo_register.php">NGO Register</a>
+                            </li>
+                        </ul>
+                    </li>
+                </ul>
+            </nav>
+        </div>
+    </section>
+
+    <div class="content">
+        <div class="left-section">
+            <img src="images/urbanlink-logo.png" alt="Hero Image" class="hero-image">
+        </div>
+        <div class="separator"></div>
+        <div class="right-section">
+            <div class="description">
+                <h2>Welcome to UrbanLink</h2>
+                <p>A web portal designed to facilitate citizen engagement and problem-solving in your district. UrbanLink allows you to report and track various issues and concerns in your area. Whether it's road damage, electrical problems, or any other issue, you can submit your problems and have the relevant government departments address them. Stay connected with your district, participate in the community, and contribute to its development.</p>
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        <p class="footer">© <span id="currentYear"></span> UrbanLink. All rights reserved.</p>
+    </footer>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        // Automatic year update
+        document.getElementById("currentYear").innerHTML = new Date().getFullYear();
+
+        (function($) {
+            // Begin jQuery
+            $(function() {
+                // DOM ready
+                // If a link has a dropdown, add sub menu toggle.
+                $("nav ul li a:not(:only-child)").click(function(e) {
+                    $(this).siblings(".nav-dropdown").toggle();
+                    // Close one dropdown when selecting another
+                    $(".nav-dropdown").not($(this).siblings()).hide();
+                    e.stopPropagation();
+                });
+                // Clicking away from dropdown will remove the dropdown class
+                $("html").click(function() {
+                    $(".nav-dropdown").hide();
+                });
+                // Toggle open and close nav styles on click
+                $("#nav-toggle").click(function() {
+                    $("nav ul").slideToggle();
+                });
+                // Hamburger to X toggle
+                $("#nav-toggle").on("click", function() {
+                    this.classList.toggle("active");
+                });
+            }); // end DOM ready
+        })(jQuery); // end jQuery
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,351 @@
+<?php
+// Start the session
+session_start();
+
+// Check if the form is submitted
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
+    // Retrieve form data
+    $username = $_POST['username'];
+    $email = $_POST['email'];
+    $password = $_POST['password'];
+    $location = $_POST['location'];
+    $organization = $_POST['organization'];
+
+    // Validate form data
+    if (empty($username) || empty($email) || empty($password) || empty($location) || empty($organization)) {
+        $errorMessage = "Please fill in all the fields";
+    } else {
+        // Database connection
+        $servername = "localhost";
+        $dbUsername = "root";
+        $dbPassword = "";
+        $dbname = "urbanlink";
+
+        $conn = new mysqli($servername, $dbUsername, $dbPassword, $dbname);
+
+        // Check connection
+        if ($conn->connect_error) {
+            die("Connection failed: " . $conn->connect_error);
+        }
+
+        // Prepare SQL query
+        $stmt = $conn->prepare("SELECT * FROM ngo_details WHERE ngo_user_name = ? AND ngo_user_email = ? AND ngo_user_pwd = ? AND ngo_org_place = ?");
+        $stmt->bind_param("ssss", $username, $email, $password, $location);
+
+        // Execute the query
+        $stmt->execute();
+        $result = $stmt->get_result();
+
+        if ($result->num_rows > 0) {
+            // Fetch the unique ID (ngo_id)
+            $row = $result->fetch_assoc();
+            $ngoId = $row['ngo_id'];
+
+            // Save values in session variables
+            $_SESSION['ngo_username'] = $username;
+            $_SESSION['ngo_useremail'] = $email;
+            $_SESSION['ngo_organization'] = $organization; // Updated session variable
+            $_SESSION['ngo_location'] = $location;
+            $_SESSION['ngo_id'] = $ngoId;
+
+            // Redirect to ngo_landing.php
+            header("Location: ngo_landing.php");
+            exit();
+        } else {
+            // Invalid credentials, display error message
+            $errorMessage = "Invalid username, email, password, or location";
+        }
+
+        // Close database connection
+        $stmt->close();
+        $conn->close();
+    }
+}
+?>
+
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>NGO Login</title>
+    <link rel="icon" href="../images/urbanlink-logo.png" type="image/icon type">
+    <meta name="viewport" content="width=device-width, minimum-scale=0.1">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #435f75;
+            margin: 0;
+            padding: 0;
+            height: 87vh;
+            font-weight: 5 placeholder="Enter your" 00;
+        }
+
+        .container {
+            width: 900px;
+            margin: 0 auto;
+            padding: 20px;
+            /* background-color: #fff; */
+            background-color: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(10px);
+            border: 1px solid #ccc;
+            border-radius: 20px;
+            height: 550px;
+            position: relative;
+            top: 80px;
+            left: 300px;
+            display: inline-block;
+            box-shadow: 0 0 0 0.5 #f2f2f2;
+        }
+
+        .container h2 {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            margin-left: 50px;
+        }
+
+        .form-group input {
+            width: 350px;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            margin-left: 50px;
+        }
+
+        .form-group select {
+            width: 370px;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            margin-left: 50px;
+            /* background-color: red; */
+        }
+
+
+        .btn {
+            display: block;
+            width: 370px;
+            padding: 10px;
+            text-align: center;
+            background-color: lightseagreen;
+            font-weight: 700;
+            color: #fff;
+            text-decoration: none;
+            border-radius: 3px;
+            position: relative;
+            left: 50px;
+            margin-top: 10px;
+            cursor: pointer;
+        }
+
+        .btn:hover {
+            background-color: #4CAF50;
+            transition: 0.2s ease-in;
+        }
+
+        .error-message {
+            color: red;
+            margin-top: 10px;
+        }
+
+        .posi {
+            position: relative;
+            top: -20px;
+            left: -30px;
+        }
+
+        .login-pic {
+            width: 440px;
+            height: 340px;
+            position: relative;
+            top: -400px;
+            left: -20px;
+            border-radius: 10px;
+            /* border: 10px solid black; */
+        }
+
+        img {
+            float: right;
+        }
+
+        @media only screen and (min-width:800px) and (max-width:1100px) {
+
+            .container {
+                margin: 0 auto;
+                width: 55%;
+                position: relative;
+                height: 750px;
+                left: 180px;
+                padding: 0 auto;
+                top: 10px;
+
+            }
+
+            .posi {
+                top: 230px;
+                position: relative;
+                left: 3px;
+
+            }
+
+            .form-group input,
+            .form-group select {
+                box-sizing: border-box;
+                width: 80%;
+                position: relative;
+
+            }
+
+            .login-pic {
+                width: 85%;
+                position: relative;
+                left: -35px;
+                top: -450px;
+                height: 200px;
+            }
+
+            .btn {
+                box-sizing: border-box;
+                position: relative;
+                width: 80%;
+            }
+        }
+
+        @media only screen and (min-width:600px) and (max-width:800px) {
+
+            .container {
+                margin: 0 auto;
+                width: 80%;
+                position: relative;
+                height: 750px;
+                left: 50px;
+                padding: 0 auto;
+                top: 10px;
+
+            }
+
+            .posi {
+                top: 230px;
+                position: relative;
+                left: 3px;
+
+            }
+
+            .form-group input,
+            .form-group select {
+                box-sizing: border-box;
+                width: 80%;
+                position: relative;
+
+            }
+
+            .login-pic {
+                width: 85%;
+                position: relative;
+                left: -35px;
+                top: -450px;
+                height: 200px;
+            }
+
+            .btn {
+                box-sizing: border-box;
+                position: relative;
+                width: 80%;
+            }
+        }
+
+        @media only screen and (min-width:300px) and (max-width:600px) {
+
+            .container {
+                margin: 0 auto;
+                width: 80%;
+                position: relative;
+                height: 750px;
+                left: 30px;
+                padding: 0 auto;
+                top: 10px;
+
+            }
+
+            .posi {
+                top: 230px;
+                position: relative;
+                left: -10px;
+
+            }
+
+            .form-group input,
+            .form-group select {
+                box-sizing: border-box;
+                width: 80%;
+                position: relative;
+
+            }
+
+            .login-pic {
+                width: 85%;
+                position: relative;
+                left: -35px;
+                top: -450px;
+                height: 200px;
+            }
+
+            .btn {
+                box-sizing: border-box;
+                position: relative;
+                width: 80%;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <h2>NGO Login</h2>
+        <form method="POST" action="ngo_login.php">
+            <div class="posi">
+                <div class="form-group">
+
+                    <label for="username">Username:</label>
+                    <input type="text" id="username" name="username" placeholder="Enter your UserName" required>
+                </div>
+                <div class="form-group">
+                    <label for="email">Email:</label>
+                    <input type="email" id="email" name="email" placeholder="Enter your UserEmail" required>
+                </div>
+                <div class="form-group">
+                    <label for="password">Password:</label>
+                    <input type="password" id="password" name="password" placeholder="Enter your Password" required>
+                </div>
+                <div class="form-group">
+                    <label for="organization">Organization:</label>
+                    <input type="text" id="organization" name="organization" placeholder="Enter your Org-Name" required>
+                </div>
+                <div class="form-group ">
+                    <label for="location">Location:</label>
+                    <select id="location" name="location" required>
+                        <option value="Gobichettipalayam">Gobichettipalayam</option>
+                        <option value="Sathyamangalam">Sathyamangalam</option>
+                    </select>
+                </div>
+                <button type="submit" class="btn">Login</button>
+            </div>
+        </form>
+
+        <?php if (isset($errorMessage)) : ?>
+            <p class="error-message"><?php echo $errorMessage; ?></p>
+        <?php endif; ?>
+
+        <img class="login-pic" src="../images/8640544.jpg" alt="Login Image">
+    </div>
+</body>
+
+</html>

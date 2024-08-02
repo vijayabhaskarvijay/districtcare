@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>NGO Registration</title>
+    <link rel="icon" href="../images/urbanlink-logo.png" type="image/icon type">
+    <style>
+        body {
+            background-image: url("../images/ngo_register_bg.jpg");
+            background-size: cover;
+            background-repeat: no-repeat;
+            font-family: Arial, sans-serif;
+        }
+
+        .container {
+            display: flex;
+            align-items: center;
+            height: 100vh;
+        }
+
+        .instructions {
+            padding: 20px;
+            background-color: rgba(255, 255, 255, 0.5);
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+            width: 400px;
+            position: relative;
+            left: 20px;
+            text-align: left;
+            top: -30px;
+        }
+
+        .form-container {
+            position: relative;
+            padding: 20px;
+            background-color: rgba(255, 255, 255, 0.5);
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+            width: 700px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        li:nth-child(even)
+        {
+            color: #ffa500;
+        }
+
+        .form-group label {
+            display: block;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+
+        .form-group input,
+        .form-group select {
+            width: 100%;
+            padding: 8px;
+            font-size: 16px;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+        }
+
+        .form-group input[type="submit"] {
+            background-color: #ffa500;
+            color: white;
+            cursor: pointer;
+        }
+
+        .form-group input[type="submit"]:hover {
+            background-color: #ff8c00;
+        }
+
+        .goback {
+            padding: 10px;
+            text-align: center;
+            background-color: #ffa500;
+            color: white;
+            cursor: pointer;
+            width: 100px;
+            margin-bottom: 20px;
+        }
+    </style>
+    <script>
+        function confirmRegistration() {
+            return confirm("Are you sure you want to register?");
+        }
+    </script>
+</head>
+
+<body>
+    <input class="goback" type="button" value="Go Back" onclick="history.back()">
+    <div class="container">
+        <div class="instructions">
+            <h2 style="color: orange; text-align: center;">Instructions</h2>
+            <ul class="qwerty">
+                <li>The first letter of each field should be capitalized.</li>
+                <li>The phone number should be 10 digits long.</li>
+                <li>Enter the designation of the employee in the NGO organization.</li>
+                <li>Ensure that the user's phone, email, and password are provided.</li>
+                <li>Enter the organization's name, place, phone, and email.</li>
+                <li>All fields marked with (*) are mandatory and must be filled out.</li>
+                <li>Please provide accurate and up-to-date information in the registration form.</li>
+                <li>The organization name should reflect the official name of the NGO.</li>
+                <li>Choose the organization place from the provided options.</li>
+                <li>The user's phone number should be a valid and active contact number.</li>
+                <li>The user's email address should be valid and regularly monitored for communication purposes.</li>
+                <li>Choose a strong password that is at least 8 characters long and includes a combination of letters, numbers, and special characters.</li>
+            </ul>
+        </div>
+        <div class="form-container">
+            <h2 style="text-align: center;">NGO Registration</h2>
+            <form method="POST" action="ngo_register.php" onsubmit="return confirmRegistration()">
+                <div class="form-group">
+                    <label for="ngo_user_name">User Name:</label>
+                    <input type="text" id="ngo_user_name" name="ngo_user_name" required>
+                </div>
+                <div class="form-group">
+                    <label for="ngo_user_position">User Position:</label>
+                    <input type="text" id="ngo_user_position" name="ngo_user_position" required>
+                </div>
+                <div class="form-group">
+                    <label for="ngo_user_phone">User Phone:</label>
+                    <input type="text" id="ngo_user_phone" name="ngo_user_phone" required>
+                </div>
+                <div class="form-group">
+                    <label for="ngo_user_email">User Email:</label>
+                    <input type="email" id="ngo_user_email" name="ngo_user_email" required>
+                </div>
+                <div class="form-group">
+                    <label for="ngo_user_pwd">User Password:</label>
+                    <input type="password" id="ngo_user_pwd" name="ngo_user_pwd" required>
+                </div>
+                <div class="form-group">
+                    <label for="ngo_org_name">Organization Name:</label>
+                    <input type="text" id="ngo_org_name" name="ngo_org_name" required>
+                </div>
+                <div class="form-group">
+                    <label for="ngo_org_place">Organization Place:</label>
+                    <select id="ngo_org_place" name="ngo_org_place" required>
+                        <option value="">Select Location</option>
+                        <option value="Gobichettipalayam">Gobichettipalayam</option>
+                        <option value="Sathyamangalam">Sathyamangalam</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="ngo_org_phone">Organization Phone:</label>
+                    <input type="text" id="ngo_org_phone" name="ngo_org_phone" required>
+                </div>
+                <div class="form-group">
+                    <label for="ngo_org_mail">Organization Email:</label>
+                    <input type="email" id="ngo_org_mail" name="ngo_org_mail" required>
+                </div>
+                <div class="form-group">
+                    <input type="submit" value="Register">
+                </div>
+            </form>
+        </div>
+    </div>
+    <?php
+    // Check if the form is submitted
+    if ($_SERVER["REQUEST_METHOD"] === "POST") {
+        // Get the form data
+        $ngo_user_name = $_POST["ngo_user_name"];
+        $ngo_user_position = $_POST["ngo_user_position"];
+        $ngo_user_phone = $_POST["ngo_user_phone"];
+        $ngo_user_email = $_POST["ngo_user_email"];
+        $ngo_user_pwd = $_POST["ngo_user_pwd"];
+        $ngo_org_name = $_POST["ngo_org_name"];
+        $ngo_org_place = $_POST["ngo_org_place"];
+        $ngo_org_phone = $_POST["ngo_org_phone"];
+        $ngo_org_mail = $_POST["ngo_org_mail"];
+
+        // Create a connection to the database
+        $conn = new mysqli("localhost", "root", "", "urbanlink");
+
+        // Check connection
+        if ($conn->connect_error) {
+            die("Connection failed: " . $conn->connect_error);
+        }
+
+        // Generate a unique ID
+        $ngo_id = uniqid();
+
+        // Prepare and execute the SQL statement to insert the data
+        $sql = "INSERT INTO ngo_details (ngo_id, ngo_user_name, ngo_user_position, ngo_user_phone, ngo_user_email, ngo_user_pwd, ngo_org_name, ngo_org_place, ngo_org_phone, ngo_org_mail) VALUES ('$ngo_id', '$ngo_user_name', '$ngo_user_position', '$ngo_user_phone', '$ngo_user_email', '$ngo_user_pwd', '$ngo_org_name', '$ngo_org_place', '$ngo_org_phone', '$ngo_org_mail')";
+        if ($conn->query($sql) === TRUE) {
+            echo "<script>alert('Registration successful! Now You Can Login');</script>";
+        } else {
+            echo "Error: " . $sql . "<br>" . $conn->error;
+        }
+
+        // Close the database connection
+        $conn->close();
+    }
+    ?>
+</body>
+
+</html>

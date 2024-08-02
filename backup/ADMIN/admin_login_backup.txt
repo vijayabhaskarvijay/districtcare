@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Admin Login</title>
+    <link rel="icon" href="../images/urbanlink-logo.png" type="image/icon type">
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-size: cover;
+            background-repeat: no-repeat;
+            background-color: #435f75;
+            height: 87vh;
+            overflow: hidden;
+        }
+
+        body::-webkit-scrollbar {
+            display: none;
+        }
+
+        .container {
+            position: absolute;
+            background-color: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(10px);
+            left: 50%;
+            top: 35%;
+            display: grid;
+            grid-template-columns: repeat(2, 50%);
+            transform: translate(-50%, -50%);
+            width: 900px;
+            margin: 100px auto;
+            padding: 20px;
+            border-radius: 20px;
+            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+            height: 500px;
+        }
+
+        img {
+            float: right;
+        }
+
+        h2 {
+            text-align: center;
+            color: #333333;
+            margin-bottom: 20px;
+            position: relative;
+            /* top: -10px; */
+            left: 220px;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        label {
+            font-weight: normal;
+            display: block;
+            margin-bottom: 2px;
+            margin-top: 10px;
+        }
+
+        input[type="text"],
+        input[type="email"],
+        input[type="password"],
+        select {
+            width: 350px;
+            padding: 10px;
+            border-radius: 3px;
+            border: 1px solid #cccccc;
+        }
+
+        input[type="submit"] {
+            width: 350px;
+            padding: 10px;
+            background-color: lightseagreen;
+            color: #ffffff;
+            border: none;
+            cursor: pointer;
+            border-radius: 3px;
+            margin-top: 30px;
+        }
+
+        input[type="submit"]:hover {
+            background-color: green;
+            color: #ffffff;
+            transition: 0.2s ease-in;
+        }
+
+        .loginpic {
+            position: relative;
+            height: 300px;
+            width: 350px;
+            left: -390px;
+            top: 230px;
+            border-radius: 10px;
+        }
+
+        .posi {
+            position: relative;
+            left: -190px;
+            top: 50px;
+        }
+
+        .error {
+            color: #FF0000;
+            margin-bottom: 10px;
+        }
+
+        .success {
+            color: #008000;
+            margin-bottom: 10px;
+        }
+
+        @media (max-width: 600px) {
+            .container {
+                margin: 50px auto;
+            }
+
+            .loginpic {
+                position: relative;
+                top: -70px;
+                left: -20px;
+                height: 100px;
+                width: 100px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <?php
+    session_start(); // Start the session
+
+    $host = "localhost";
+    $username = "root";
+    $password = "";
+    $database = "urbanlink";
+
+    $conn = mysqli_connect($host, $username, $password, $database);
+
+    if (isset($_POST['username']) && isset($_POST['email']) && isset($_POST['password'])) {
+        $username = $_POST['username'];
+        $email = $_POST['email'];
+        $password = $_POST['password'];
+
+        $query = "SELECT * FROM admin_details WHERE admin_name = '$username' AND admin_email = '$email' AND admin_pass = '$password'";
+
+        $result = mysqli_query($conn, $query);
+
+        if (mysqli_num_rows($result) == 1) {
+            // Successful verification
+            $row = mysqli_fetch_assoc($result);
+
+            $_SESSION['admin_username'] = $row['admin_name'];
+            $_SESSION['admin_id'] = $row['admin_id'];
+
+            header("Location: admin_landing.php");
+            exit();
+        } else {
+            // Error message
+            $error = "Invalid credentials. Please try again.";
+        }
+    }
+    ?>
+    <div class="container">
+        <h2>Admin Login</h2>
+        <div class="posi">
+            <form method="POST" action="<?php echo $_SERVER['PHP_SELF']; ?>">
+                <div class="posi">
+                <label for="username">Username:</label>
+                <input type="text" id="username" name="username" placeholder="Enter your username" required>
+            </div>
+            <div class="posi">
+                <label for="email">Email:</label>
+                <input type="email" id="email" name="email" placeholder="Enter your user-email" required>
+            </div>
+            <div class="posi">
+                <label for="password">Password:</label>
+                <input type="password" id="password" name="password" placeholder="Enter your password" required>
+            </div>
+            <div class="posi">
+                <input type="submit" value="Login">
+            </div>
+        </form>
+    </div>
+</div>
+<img class="loginpic" src="../images/5480314_2778464.jpg">
+</body>
+
+</html>

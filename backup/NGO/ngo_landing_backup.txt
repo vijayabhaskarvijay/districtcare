@@ -1,0 +1,500 @@
+<?php
+// Logout PHP code
+if (isset($_POST['logout'])) {
+    // Destroy session
+    session_start();
+    session_destroy();
+    // Redirect to index.php
+    header("Location: ../index.php");
+    exit();
+}
+
+// Start session
+session_start();
+
+// Check if logged in
+if (!isset($_SESSION['ngo_username'])) {
+    // Redirect to login page
+    header("Location: ngo_login.php");
+    exit();
+}
+
+// Set session cookie with expiration time
+$expire = time() + (60 * 60); // 1 hour
+setcookie(session_name(), session_id(), $expire);
+
+// Replace the database connection details
+$servername = "localhost";
+$username = "root";
+$password = "";
+$dbname = "urbanlink";
+
+// Retrieve posts based on the selected option
+$selectedOption = isset($_GET['option']) ? $_GET['option'] : '';
+
+$conn = new mysqli($servername, $username, $password, $dbname);
+
+// Check connection
+if ($conn->connect_error) {
+    die("Connection failed: " . $conn->connect_error);
+}
+
+// Function to retrieve and display posts
+function displayPosts($tableName, $title, $postIDColumn, $postColumns)
+{
+    global $conn;
+    $query = "SELECT * FROM $tableName";
+    $result = $conn->query($query);
+
+    echo '<div id="' . $tableName . '" class="post-container">';
+    echo '<h2>' . $title . '</h2>';
+
+    if ($result->num_rows > 0) {
+        while ($row = $result->fetch_assoc()) {
+            $postID = $row[$postIDColumn];
+            echo '<div class="post">';
+            echo '<div class="details">';
+            echo '<span class="tag-username">' . $row[$postColumns[0]] . '</span>';
+            echo '<span class="tag-phone">' . $row[$postColumns[1]] . '</span>';
+            echo '<span class="tag-location">' . $row[$postColumns[2]] . '</span>';
+            echo '<span class="tag-date">' . $row[$postColumns[3]] . '</span>';
+            echo '</div>';
+            echo '<div class="description">' . $row[$postColumns[4]] . '</div>';
+            echo '</div>';
+        }
+    } else {
+        echo '<p>No ' . $title . ' posts found.</p>';
+    }
+
+    echo '</div>';
+}
+
+
+// Array of post options and their details
+$postOptions = [
+    [
+        'tableName' => 'public_posts',
+        'title' => 'Public Posts',
+        'postIDColumn' => 'pp_id',
+        'postColumns' => ['pp_username', 'pp_userphone', 'pp_userloc', 'pp_date', 'pp_userpost_description']
+    ],
+    [
+        'tableName' => 'ngo_post_details',
+        'title' => 'NGO Posts',
+        'postIDColumn' => 'ngo_post_id',
+        'postColumns' => ['ngo_user_name', 'ngo_user_email', 'ngo_user_phone', 'ngo_post_date', 'ngo_post_desc']
+    ],
+    [
+        'tableName' => 'govn_posts',
+        'title' => 'Government Posts',
+        'postIDColumn' => 'gp_id',
+        'postColumns' => ['gp_staff_name', 'gp_staff_phone', 'gp_place', 'gp_date', 'gp_desc']
+    ],
+    [
+        'tableName' => 'admin_posts',
+        'title' => 'Admin Posts',
+        'postIDColumn' => 'ap_id',
+        'postColumns' => ['ap_admin_name', 'ap_admin_phone', 'ap_place', 'ap_date', 'ap_desc']
+    ]
+];
+?>
+
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>NGO Landing</title>
+    <link rel="icon" href="../images/urbanlink-logo.png" type="image/icon type">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://kit.fontawesome.com/4c43584236.js" crossorigin="anonymous"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-image: url("../images/9178339_4063179.jpg");
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            margin: 0;
+            padding: 0;
+        }
+
+        .log {
+            padding: 10px;
+            border: 2px solid gray;
+            background-color: #3090C7;
+            cursor: pointer;
+            color: white;
+            position: relative;
+            left: -10px;
+        }
+
+        .log:hover {
+            background-color: #e57373;
+            transition: 0.2s ease-out;
+        }
+
+
+
+        /* net resource navbar css starts */
+        :root {
+            --nav-color: #435f75;
+            --dark-grey: #333;
+        }
+
+        .logo {
+            color: white;
+            font-size: 25px;
+
+        }
+
+        #navbar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background-color: rgba(105, 110, 190, 100);
+            backdrop-filter: blur(50px);
+            padding: 0 5px 0 5px;
+            font-size: 15px;
+            font-weight: bold;
+        }
+
+        #list {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            width: 610px;
+            list-style: none;
+            /* font-size: 20px; */
+        }
+
+        #list a {
+            text-decoration: none;
+            color: white;
+            position: relative;
+            left: -20px;
+        }
+
+        #list>li>a:after {
+            content: "";
+            width: 0%;
+            height: 3px;
+            background-color: white;
+            position: absolute;
+            top: 20px;
+            left: 0;
+            transition: 150ms ease-in-out;
+        }
+
+        #list>li>a:hover:after {
+            width: 100%;
+        }
+
+        #hamburger_menu {
+            display: flex;
+            align-items: center;
+            padding-inline: 8px;
+            padding-block: 4px;
+            border: none;
+            border-radius: 4px;
+            background-color: var(--dark-grey);
+            color: white;
+            cursor: pointer;
+            display: none;
+        }
+
+        #hamburger_menu i {
+            font-size: 20px;
+        }
+
+        #hamburger_menu span {
+            display: inline-block;
+            margin-left: 4px;
+        }
+
+        @media only screen and (max-width: 600px) {
+            #hamburger_menu {
+                display: flex;
+            }
+
+            #navbar {
+                height: 14px;
+            }
+
+            #list {
+                display: flex;
+                flex-direction: column;
+                width: 100%;
+                position:absolute;
+                left: 50%;
+                transform: translate(-50%);
+                margin-top: 24px;
+                background-color: var(--nav-color);
+                padding-top: 60px;
+                padding-bottom: 120px;
+            }
+
+            #list li {
+                padding-block: 24px;
+                text-decoration: none;
+                list-style: none;
+            }
+
+            #list>li>a:after {
+                top: 18px;
+            }
+
+            #list.collapsed {
+                display: none;
+            }
+        }
+
+
+        /* net resource navbar css ends*/
+
+        @media (max-width: 768px) {
+
+            .navbar .nav-items-left,
+            .navbar .nav-items-right {
+                display: none;
+            }
+
+            .navbar .menu-icon {
+                display: block;
+            }
+
+            .navbar .nav-sidebar {
+                position: fixed;
+                top: 0;
+                left: -200px;
+                bottom: 0;
+                width: 200px;
+                background-color: #435f75;
+                padding: 20px;
+                transition: left 0.3s ease-in-out;
+            }
+
+            .navbar .nav-sidebar.active {
+                left: 0;
+            }
+
+            .navbar .nav-sidebar .nav-items {
+                display: flex;
+                flex-direction: column;
+                align-items: flex-start;
+                margin-top: 20px;
+            }
+
+            .navbar .nav-sidebar .nav-items a {
+                color: #fff;
+                text-decoration: none;
+                margin-bottom: 10px;
+                font-size: 16px;
+            }
+
+            .navbar .nav-sidebar .nav-items .logbutton {
+                display: block;
+                margin-top: 20px;
+            }
+        }
+
+        .main-container {
+            display: flex;
+            flex-wrap: wrap;
+            max-width: 800px;
+            margin: 20px auto;
+            background-color: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(10px);
+            padding: 20px;
+        }
+
+        .bgoption {
+            background-color: white;
+        }
+
+        .options-container {
+            width: 100%;
+            margin-bottom: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px;
+            border-radius: 5px;
+            overflow-x: auto;
+        }
+
+        .options-container a {
+            color: #333;
+            text-decoration: none;
+            padding: 5px 10px;
+            margin-right: 10px;
+            border-radius: 5px;
+            transition: background-color 0.3s ease;
+        }
+
+        .options-container a:hover {
+            background-color: forestgreen;
+            transition: 0.2s ease-in-out;
+        }
+
+        .options-container a.active {
+            background-color: #3090C7;
+        }
+
+        .post-container {
+            height: 500px;
+            overflow-y: auto;
+            padding-bottom: 20px;
+            width: 100%;
+        }
+
+        .post {
+            margin-bottom: 20px;
+            border-bottom: 1px solid #ccc;
+            /* padding-bottom: 10px; */
+            padding: 10px;
+            background-color: white;
+        }
+
+        .post .details {
+            margin-bottom: 10px;
+            /* background-color: white; */
+        }
+
+        .post .details span {
+            margin-right: 10px;
+            display: inline-block;
+            padding: 5px 10px;
+            border-radius: 5px;
+        }
+
+        .post .tags {
+            margin-top: 10px;
+        }
+
+        .post .tags span {
+            display: inline-block;
+            padding: 3px 6px;
+            margin-right: 5px;
+            border-radius: 3px;
+
+        }
+
+        .tag-username {
+            background-color: #ffcc80;
+            color: white;
+            font-size: 13px;
+            font-weight: bold;
+        }
+
+        .tag-location {
+            background-color: #64b5f6;
+            font-size: 13px;
+            color: white;
+            font-weight: bold;
+        }
+
+        .tag-phone {
+            background-color: #81c784;
+            font-size: 13px;
+            color: white;
+            font-weight: bold;
+        }
+
+        .tag-date {
+            background-color: #e57373;
+            font-size: 13px;
+            color: white;
+            font-weight: bold;
+        }
+
+        .post .description {
+            background-color: #DADBDD;
+            /* background-color: #f9f9f9; */
+            padding: 10px;
+            border-radius: 5px;
+        }
+    </style>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script>
+        $(document).ready(function() {
+            let hamburger = $('#hamburger_menu');
+            let list = $('#list');
+
+            hamburger.click(function() {
+                list.toggleClass('collapsed');
+            });
+        });
+    </script>
+    <script>
+        $(window).on('unload', function() {
+            $.ajax({
+                url: 'logout.php',
+                method: 'POST',
+                async: false
+            });
+        });
+    </script>
+</head>
+
+<body>
+    <!-- Navbar -->
+    <div id="navbar">
+        <div class="logo">URBANLINK</div>
+        <div class="links">
+            <ul id="list" class="list">
+                <li><a href="#">PROFILE</a></li>
+                <li><a href="#">SEE PROBLEMS</a></li>
+                <li><a href="#">CREATE POSTS</a></li>
+                <li><a href="#">MANAGE POSTS</a></li>
+                <li><a href="#">FAQ</a></li>
+                <form method="POST" action="">
+                    <button type="submit" class="log" name="logout">Logout</button>
+                </form>
+            </ul>
+        </div>
+        <button id="hamburger_menu" class="btn">
+            <i class='bx bx-menu'></i>
+            <span>Menu</span>
+        </button>
+    </div>
+
+
+    <!-- Main Container -->
+    <div class="main-container">
+        <div class="options-container">
+            <?php
+            // Display options
+            foreach ($postOptions as $option) {
+                $tableName = $option['tableName'];
+                $title = $option['title'];
+                $activeClass = ($selectedOption === $tableName) ? 'active' : '';
+                echo '<a href="?option=' . $tableName . '" class="' . $activeClass . '">' . $title . '</a>';
+            }
+            ?>
+        </div>
+        <div class="post-container">
+            <?php
+            $selectedOption = isset($_GET['option']) ? $_GET['option'] : 'public_posts';
+            // Display posts based on the selected option
+            foreach ($postOptions as $option) {
+                $tableName = $option['tableName'];
+                $title = $option['title'];
+                $postIDColumn = $option['postIDColumn'];
+                $postColumns = $option['postColumns'];
+
+                if ($selectedOption === $tableName) {
+                    displayPosts($tableName, $title, $postIDColumn, $postColumns);
+                }
+            }
+            ?>
+        </div>
+    </div>
+</body>
+
+</html>
+
+<?php
+// Close database connection
+$conn->close();
+?>
